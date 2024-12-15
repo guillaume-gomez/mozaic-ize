@@ -6,6 +6,7 @@ import imageTest from "/lifesaver_opaque.jpg";
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteColor } from "./paletteGenerator";
+import { resizeImage } from "./utils";
 import './App.css';
 
 function App() {
@@ -14,14 +15,10 @@ function App() {
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
   const [shadowBlur, setShadowBlur] = useState<number>(10);
-  const imageRef = useRef<HTMLImageElement>(imageTest);
-  const canvasRef = useRef<HTMLCanvasDocument>();
-
-
-
 
   function uploadImage(newImage: HTMLImageElement) {
-    setImage(newImage);
+    const resizedImage = resizeImage(newImage, 1024, 1024)
+    setImage(resizedImage);
   }
 
   return (
@@ -35,7 +32,6 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <img src={imageTest} ref={imageRef} alt="image test" />
       <div className="form">
         <div>
           <label>BackgroundColor</label>
@@ -67,7 +63,6 @@ function App() {
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
         />
-        <canvas ref={canvasRef} width={512} height={512}/>
         <canvas id="palette" width={512} height={512} />
       </div>
       <InputFileWithPreview onChange={uploadImage} value={image} />

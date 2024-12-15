@@ -115,8 +115,9 @@ function MozaicCanvas({ imageOrigin, backgroundColor, shadowBlur, imageColorMode
 
   function drawTiles(context: CanvasRenderingContext2D, tilesData: TileData[], tileSize: number) {
     context.shadowColor = "black";
-    context.shadowOffsetX = 4;
-    context.shadowOffsetY = 4;
+    const shadow = Math.floor(Math.sqrt(tileSize));
+    context.shadowOffsetX = shadow;
+    context.shadowOffsetY = shadow;
     context.shadowBlur = shadowBlur;
     tilesData.forEach(colorData => {
         const { red, green, blue } = colorData.color;
