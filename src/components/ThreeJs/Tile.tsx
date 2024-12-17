@@ -11,7 +11,7 @@ interface TileProps {
 function Tile({x, y, width, height, color}: TileProps) {
     return (
         <mesh
-            position={[x, y, 0]}
+            position={[x, y, -0.1]}
         >
             <boxGeometry args={[width, height, 0.2]} />
             <meshStandardMaterial

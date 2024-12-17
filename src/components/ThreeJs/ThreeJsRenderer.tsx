@@ -25,7 +25,7 @@ function generateRandomData() {
   TileData
 }
 
-const SCALE = 100;
+const SCALE = 10;
 
 function ThreejsRenderer({
   widthMozaic,
@@ -66,7 +66,7 @@ function ThreejsRenderer({
           <Stage preset="rembrandt" adjustCamera={false} intensity={0.5} environment="studio">
              <group scale={1/SCALE}>
               <Box args={[widthMozaic, heightMozaic, 0.2]} material-color={backgroundColor} />
-              {/*<Tile x={45} y={100} width={widthTile} heightTile={heightTile} color="purple" />*/}
+              <Tile x={1} y={1} width={widthTile} heightTile={heightTile} color="purple" />
              </group>
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>
