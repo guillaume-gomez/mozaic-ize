@@ -84,6 +84,10 @@ function App() {
             backgroundColor={backgroundColor}
             widthMozaic={width}
             heightMozaic={height}
+            widthTile={16}
+            heightMozaic={16}
+            padding={2}
+
           />
         </div>
         <canvas id="palette" width={512} height={512} />
