@@ -19,9 +19,11 @@ function App() {
   const [shadowBlur, setShadowBlur] = useState<number>(10);
   const [mozaicTile, setMozaicTile] = useState<number>(18);
   const [padding, setPadding] = useState<number>(1);
+  const [width, ] =  useState<number>(1024);
+  const [height, ] =  useState<number>(1024);
 
   function uploadImage(newImage: HTMLImageElement) {
-    const resizedImage = resizeImage(newImage, 1024, 1024)
+    const resizedImage = resizeImage(newImage, width, height)
     setImage(resizedImage);
   }
 
@@ -77,7 +79,13 @@ function App() {
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
         />
-        <ThreeJsRenderer />
+        <div style={{ height: 400 }}>
+          <ThreeJsRenderer
+            backgroundColor={backgroundColor}
+            widthMozaic={width}
+            heightMozaic={height}
+          />
+        </div>
         <canvas id="palette" width={512} height={512} />
       </div>
       <InputFileWithPreview onChange={uploadImage} value={image} />

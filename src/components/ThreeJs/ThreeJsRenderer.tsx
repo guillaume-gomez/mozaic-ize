@@ -1,15 +1,18 @@
 import { useRef, Suspense, useEffect } from 'react';
 import { useFullscreen } from "rooks";
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds } from '@react-three/drei';
+import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Box } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 
 interface ThreeJsRendererProps {
+  widthMozaic: number;
+  heightMozaic: number;
+  backgroundColor: string;
 }
 
 const SCALE = 1000;
 
-function ThreejsRenderer({} : ThreeJsRendererProps ): React.ReactElement {
+function ThreejsRenderer({ widthMozaic, heightMozaic, backgroundColor } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
     toggleFullscreen,
@@ -39,6 +42,9 @@ function ThreejsRenderer({} : ThreeJsRendererProps ): React.ReactElement {
         <color attach="background" args={['#06092c']} />
         <Suspense fallback={<FallBackLoader/>}>
           <Stage preset="rembrandt" adjustCamera={false} intensity={0.5} environment="studio">
+             <group scale={1/SCALE}>
+              <Box args={[widthMozaic, heightMozaic, 0.2]} material-color={backgroundColor} />
+             </group>
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>
         </Suspense>
