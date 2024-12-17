@@ -7,6 +7,7 @@ import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import Range from "./components/Range";
 import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteColor } from "./paletteGenerator";
+import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
 import './App.css';
 
@@ -76,6 +77,7 @@ function App() {
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
         />
+        <ThreeJsRenderer />
         <canvas id="palette" width={512} height={512} />
       </div>
       <InputFileWithPreview onChange={uploadImage} value={image} />
