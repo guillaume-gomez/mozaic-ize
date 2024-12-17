@@ -5,6 +5,7 @@ import { minBy } from "lodash";
 import imageTest from "/lifesaver_opaque.jpg";
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
+import Range from "./components/Range";
 import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteColor } from "./paletteGenerator";
 import { resizeImage } from "./utils";
 import './App.css';
@@ -15,6 +16,8 @@ function App() {
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
   const [shadowBlur, setShadowBlur] = useState<number>(10);
+  const [mozaicTile, setMozaicTile] = useState<number>(18);
+  const [padding, setPadding] = useState<number>(1);
 
   function uploadImage(newImage: HTMLImageElement) {
     const resizedImage = resizeImage(newImage, 1024, 1024)
@@ -42,16 +45,26 @@ function App() {
           />
         </div>
         <div>
-          <label>Shadow Blur</label>
-          <span>{shadowBlur}</span>
-          <input
-            type="range"
-            step={1}
+          <Range
             min={0}
             max={10}
+            label={"Shadow Blur"}
             value={shadowBlur}
-            onChange={(e) => setShadowBlur(e.target.value)}
-
+            onChange={setShadowBlur}
+          />
+          <Range
+            min={2}
+            max={20}
+            label={"Mozaic Tile"}
+            value={mozaicTile}
+            onChange={setMozaicTile}
+          />
+          <Range
+            min={1}
+            max={10}
+            label={"Padding"}
+            value={padding}
+            onChange={setPadding}
           />
         </div>
 
