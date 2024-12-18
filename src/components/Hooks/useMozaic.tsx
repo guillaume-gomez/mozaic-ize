@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
+import { minBy } from "lodash";
 import {
     generateColorPalette,
     drawPalette,
     extendPalette,
     fromPaletteToPaletteColor
-} from "../paletteGenerator";
+} from "../../paletteGenerator";
 
 interface Color {
   red: number;
@@ -19,17 +20,17 @@ interface TileData {
 }
 
 function useMozaic() {
-    function generate(imageOrigin, backgroundColor, shadowBlur, imageColorMode) {
+  const [tilesData, setTilesData] = useState<TileData[]>([]);
+
+    function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : void {
         const canvasBuffer = document.createElement("canvas");
         const palette = generateColorPalette(imageOrigin , 20);
         const paletteColor = fromPaletteToPaletteColor(palette);
-
-
-        const context = canvasRef.getContext('2d');
+        const context = canvasBuffer.getContext('2d');
         const {width, height} = imageOrigin
         // create backing canvas
-        canvasRef.width = width;
-        canvasRef.height = height;
+        canvasBuffer.width = width;
+        canvasBuffer.height = height;
         // restore main canvas
         context.drawImage(imageOrigin, 0,0);
 
@@ -52,12 +53,7 @@ function useMozaic() {
           padding,
           paletteColor
         );
-        context.clearRect(0,0, width, height);
-
-        context.fillStyle = backgroundColor;
-        context.fillRect(0,0, width, height);
-
-        drawTiles(context, tilesData, tileSize - (2*padding));
+        setTilesData(tilesData);
     }
 
     function getColorsImage(
@@ -66,13 +62,14 @@ function useMozaic() {
       height: number,
       tileSize: number,
       padding: number,
-      paletteColor: Color[]) : TileData[] {
+      paletteColor: Color[],
+      imageColorMode: string) : TileData[] {
       const tilesData: TileData[] = [];
       for(let x = padding; x < width; x+= (tileSize + padding) ) {
         for(let y = padding; y < height; y+= (tileSize + padding) ) {
-          const color = computeColor(context, tileSize - (2*padding), x + padding, y + padding, paletteColor);
+          const color = computeColor(context, tileSize - (2*padding), x + padding, y + padding, paletteColor, imageColorMode);
           tilesData.push({
-            color,
+            color: rgbToHex(color.red, color.green, color.blue),
             x: x + padding,
             y: y + padding,
           }
@@ -82,7 +79,14 @@ function useMozaic() {
       return tilesData;
     }
 
-    function computeColor(context: CanvasRenderingContext2D, tileSize: number, x: number, y: number, paletteColor: Color[]) {
+    function computeColor(
+      context: CanvasRenderingContext2D,
+      tileSize: number,
+      x: number,
+      y: number,
+      paletteColor: Color[],
+      imageColorMode: string
+    ) {
       if(imageColorMode ==="normal") {
         return interpolateArea(context, tileSize, x, y);
       }
@@ -144,8 +148,7 @@ function useMozaic() {
       return "#" + componentToHex(Math.floor(r)) + componentToHex(Math.floor(g)) + componentToHex(Math.floor(b));
     }
 
-
-  return { generate };
+  return { generate, tilesData };
 }
 
-export default MozaicCanvas;
+export default useMozaic;

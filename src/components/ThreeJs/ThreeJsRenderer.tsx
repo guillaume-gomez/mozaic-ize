@@ -12,6 +12,7 @@ interface ThreeJsRendererProps {
   heightTile: number;
   padding: number
   backgroundColor: string;
+  tilesData: TileData[];
 }
 
 interface TileData {
@@ -33,7 +34,8 @@ function ThreejsRenderer({
   widthTile,
   heightTile,
   padding,
-  backgroundColor
+  backgroundColor,
+  tilesData
 } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
@@ -64,9 +66,11 @@ function ThreejsRenderer({
         <color attach="background" args={['#06092c']} />
         <Suspense fallback={<FallBackLoader/>}>
           <Stage preset="rembrandt" adjustCamera={false} intensity={0.5} environment="studio">
-             <group scale={1/SCALE}>
-              <Box args={[widthMozaic, heightMozaic, 0.2]} material-color={backgroundColor} />
-              <Tile x={1} y={1} width={widthTile} heightTile={heightTile} color="purple" />
+             <group scale={1/SCALE} position={[0,heightMozaic/SCALE/2,0]}>
+              <Box args={[widthMozaic, heightMozaic, 10]} material-color={backgroundColor} />
+              {tilesData.map(({x, y, color}) => 
+                <Tile x={x - widthMozaic/2} y={-y +heightMozaic/2} width={widthTile} height={heightTile} color={color} />
+              )}
              </group>
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>
@@ -74,7 +78,7 @@ function ThreejsRenderer({
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport labelColor="white" axisHeadScale={1} />
         </GizmoHelper>
-        <OrbitControls makeDefault maxDistance={5} />
+        <OrbitControls makeDefault maxDistance={20} />
       </Canvas>
     </div>
   );

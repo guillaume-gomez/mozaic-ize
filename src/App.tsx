@@ -9,6 +9,7 @@ import Range from "./components/Range";
 import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteColor } from "./paletteGenerator";
 import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
+import useMozaic from "./components/Hooks/useMozaic";
 import './App.css';
 
 function App() {
@@ -21,8 +22,9 @@ function App() {
   const [padding, setPadding] = useState<number>(1);
   const [width, ] =  useState<number>(1024);
   const [height, ] =  useState<number>(1024);
+  const {generate, tilesData} = useMozaic();
 
-  console.log("height", height)
+  console.log("height", tilesData)
 
   function uploadImage(newImage: HTMLImageElement) {
     const resizedImage = resizeImage(newImage, width, height)
@@ -72,7 +74,6 @@ function App() {
             onChange={setPadding}
           />
         </div>
-
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
         <MozaicCanvas
@@ -81,6 +82,11 @@ function App() {
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
         />
+        <button
+          className="btn btn-primary"
+          onClick={() => generate(image, "normal")}>
+          Generate fdfd
+        </button>
         <div style={{ height: 400 }}>
           <ThreeJsRenderer
             backgroundColor={backgroundColor}
@@ -89,7 +95,7 @@ function App() {
             widthTile={16}
             heightTile={16}
             padding={2}
-
+            tilesData={tilesData}
           />
         </div>
         <canvas id="palette" width={512} height={512} />
