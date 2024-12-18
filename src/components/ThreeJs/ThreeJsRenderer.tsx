@@ -25,7 +25,7 @@ function generateRandomData() {
   TileData
 }
 
-const SCALE = 10;
+const SCALE = 100;
 
 function ThreejsRenderer({
   widthMozaic,
@@ -53,12 +53,12 @@ function ThreejsRenderer({
         </button>
       </div>
       <Canvas
-        camera={{ position: [0,0.75, 1.5], fov: 75, far: 5 }}
+        camera={{ position: [0,0.75, 1.5], fov: 75, far: 50 }}
         dpr={window.devicePixelRatio}
         shadows
         onDoubleClick={() => {
           toggleFullscreen();
-          recenter();
+         // recenter();
         }}
       >
         <color attach="background" args={['#06092c']} />

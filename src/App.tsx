@@ -22,6 +22,8 @@ function App() {
   const [width, ] =  useState<number>(1024);
   const [height, ] =  useState<number>(1024);
 
+  console.log("height", height)
+
   function uploadImage(newImage: HTMLImageElement) {
     const resizedImage = resizeImage(newImage, width, height)
     setImage(resizedImage);
@@ -85,7 +87,7 @@ function App() {
             widthMozaic={width}
             heightMozaic={height}
             widthTile={16}
-            heightMozaic={16}
+            heightTile={16}
             padding={2}
 
           />
