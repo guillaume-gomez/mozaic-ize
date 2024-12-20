@@ -1,26 +1,20 @@
 import { Box } from '@react-three/drei';
+import { useMemo } from "react";
 
 interface TileProps {
-    width: number;
-    height: number;
-    x: number;
-    y: number
+    position: [number, number, number];
+    geometry: any;
+    material: any;
     color: string;
 }
 
-function Tile({x, y, width, height, color}: TileProps) {
+function Tile({ position, color, geometry, material}: TileProps) {
     return (
         <mesh
-            position={[x, y, +0.1]}
-        >
-            <boxGeometry args={[width, height, 20]} />
-            <meshStandardMaterial
-                color={color}
-                emissive={"#212121"}
-                roughness={0.478}
-                metalness={0.122}
-            />
-        </mesh>
+            position={position}
+            geometry={geometry}
+            material={material}
+        />
     )
 }
 

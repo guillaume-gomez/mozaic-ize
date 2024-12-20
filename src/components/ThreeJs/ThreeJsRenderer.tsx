@@ -1,9 +1,9 @@
 import { useRef, Suspense, useEffect } from 'react';
 import { useFullscreen } from "rooks";
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Box } from '@react-three/drei';
+import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
-import Tile from "./Tile";
+import MozaicManager from "./MozaicManager";
 
 interface ThreeJsRendererProps {
   widthMozaic: number;
@@ -64,14 +64,18 @@ function ThreejsRenderer({
         }}
       >
         <color attach="background" args={['#06092c']} />
+        { import.meta.env.MODE === "development" ? <Stats/> : <></> }
         <Suspense fallback={<FallBackLoader/>}>
           <Stage preset="rembrandt" adjustCamera={false} intensity={0.5} environment="studio">
-             <group scale={1/SCALE} position={[0,heightMozaic/SCALE/2,0]}>
-              <Box args={[widthMozaic, heightMozaic, 10]} material-color={backgroundColor} />
-              {tilesData.map(({x, y, color}) => 
-                <Tile x={x - widthMozaic/2} y={-y +heightMozaic/2} width={widthTile} height={heightTile} color={color} />
-              )}
-             </group>
+             <MozaicManager
+                backgroundColor={backgroundColor}
+                widthMozaic={widthMozaic}
+                heightMozaic={heightMozaic}
+                widthTile={widthTile}
+                heightTile={heightTile}
+                padding={padding}
+                tilesData={tilesData}
+             />
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>
         </Suspense>
