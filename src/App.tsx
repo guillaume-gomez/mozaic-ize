@@ -10,7 +10,6 @@ import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteC
 import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
-import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
