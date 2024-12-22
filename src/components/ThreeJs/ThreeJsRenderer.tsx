@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
+import { TileData } from "../Hooks/useMozaic";
 
 interface ThreeJsRendererProps {
   widthMozaic: number;
@@ -13,17 +14,6 @@ interface ThreeJsRendererProps {
   padding: number
   backgroundColor: string;
   tilesData: TileData[];
-}
-
-interface TileData {
-  color: Color;
-  x: number;
-  y: number;
-}
-
-
-function generateRandomData() {
-  TileData
 }
 
 const SCALE = 100;

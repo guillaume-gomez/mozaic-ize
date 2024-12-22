@@ -16,14 +16,11 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
-  const [shadowBlur, setShadowBlur] = useState<number>(10);
   const [mozaicTile, setMozaicTile] = useState<number>(18);
   const [padding, setPadding] = useState<number>(1);
   const [width, ] =  useState<number>(1024);
   const [height, ] =  useState<number>(1024);
   const {generate, tilesData} = useMozaic();
-
-  console.log("height", tilesData)
 
   function uploadImage(newImage: HTMLImageElement) {
     const resizedImage = resizeImage(newImage, width, height)
@@ -52,13 +49,6 @@ function App() {
         </div>
         <div>
           <Range
-            min={0}
-            max={10}
-            label={"Shadow Blur"}
-            value={shadowBlur}
-            onChange={setShadowBlur}
-          />
-          <Range
             min={2}
             max={20}
             label={"Mozaic Tile"}
@@ -76,15 +66,18 @@ function App() {
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
         <MozaicCanvas
-          imageOrigin={image}
-          shadowBlur={shadowBlur}
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
+          tileSize={18}
+          padding={2}
+          tilesData={tilesData}
+          width={width}
+          height={height}
         />
         <button
           className="btn btn-primary"
           onClick={() => generate(image, "normal")}>
-          Generate fdfd
+          Generate
         </button>
         <div style={{ height: 400 }}>
           <ThreeJsRenderer

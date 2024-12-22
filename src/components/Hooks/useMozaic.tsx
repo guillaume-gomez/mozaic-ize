@@ -13,7 +13,7 @@ interface Color {
   blue: number;
 }
 
-interface TileData {
+export interface TileData {
   color: Color;
   x: number;
   y: number;
@@ -69,7 +69,7 @@ function useMozaic() {
         for(let y = padding; y < height; y+= (tileSize + padding) ) {
           const color = computeColor(context, tileSize - (2*padding), x + padding, y + padding, paletteColor, imageColorMode);
           tilesData.push({
-            color: rgbToHex(color.red, color.green, color.blue),
+            color,
             x: x + padding,
             y: y + padding,
           }
@@ -137,15 +137,6 @@ function useMozaic() {
       const greenDiff = (color2.green - color1.green);
       const blueDiff = (color2.blue - color1.blue);
       return (redDiff * redDiff) + (greenDiff * greenDiff) + (blueDiff * blueDiff);
-    }
-
-    function componentToHex(c: number) : string {
-      const hex = c.toString(16);
-      return hex.length == 1 ? "0" + hex : hex;
-    }
-
-    function rgbToHex(r: number, g: number, b: number) : string {
-      return "#" + componentToHex(Math.floor(r)) + componentToHex(Math.floor(g)) + componentToHex(Math.floor(b));
     }
 
   return { generate, tilesData };

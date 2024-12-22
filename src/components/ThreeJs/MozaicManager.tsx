@@ -2,6 +2,7 @@ import { useMemo, useEffect, useRef } from "react";
 import { Box } from '@react-three/drei';
 import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color } from 'three';
 import Tile from "./Tile";
+import { rgbToHex } from "../../utils";
 
 interface MozaicManagerProps {
   widthMozaic: number;
@@ -45,8 +46,10 @@ function MozaicManager({
         console.log("not loaded")
     }
     tilesData.map(({x, y, color}, index) => {
+      const { red, green, blue } = color;
       const object = new Object3D();
-      const colorThree = new Color(color);
+      const colorThree = new Color(rgbToHex(red, green, blue));
+      console.log(colorThree)
       object.position.set(x, -y, 0.1);
       object.updateMatrix();
       meshRef.current?.setColorAt(index, colorThree);
