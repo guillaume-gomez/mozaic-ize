@@ -1,4 +1,6 @@
 import { useMemo, useEffect, useRef } from "react";
+import { TextureLoader } from 'three/src/loaders/TextureLoader';
+import { useLoader } from '@react-three/fiber';
 import { Box } from '@react-three/drei';
 import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color } from 'three';
 import Tile from "./Tile";
@@ -25,14 +27,22 @@ function MozaicManager({
   backgroundColor,
   tilesData}: MozaicManagerProps)
 {
+    const [displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
+      'plastic_0021/reduced/height_1k.png',
+      'plastic_0021/reduced/normal_1k.png',
+      'plastic_0021/reduced/roughness_1k.jpg',
+      'plastic_0021/reduced/ao_1k.jpg',
+    ]);
     const meshRef = useRef<InstancedMesh>(null);
     const geometry = useMemo(() => new BoxGeometry(widthTile, heightTile, 20), [widthTile, heightTile]);
     const material = useMemo(() => {
         return new MeshStandardMaterial({
             color: "#FFFFFF",
-            emissive:"#212121",
-            roughness:0.478,
-            metalness:0.122
+            displacementScale: 0,
+            displacementMap,
+            normalMap,
+            roughnessMap,
+            aoMap
         });
     },[]);
 
@@ -49,7 +59,6 @@ function MozaicManager({
       const { red, green, blue } = color;
       const object = new Object3D();
       const colorThree = new Color(rgbToHex(red, green, blue));
-      console.log(colorThree)
       object.position.set(x, -y, 0.1);
       object.updateMatrix();
       meshRef.current?.setColorAt(index, colorThree);
