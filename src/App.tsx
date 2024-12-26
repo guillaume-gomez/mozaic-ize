@@ -56,7 +56,7 @@ function App() {
             onChange={setMozaicTile}
           />
           <Range
-            min={1}
+            min={0}
             max={10}
             label={"Padding"}
             value={padding}
