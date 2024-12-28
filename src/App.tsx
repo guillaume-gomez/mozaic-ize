@@ -51,6 +51,7 @@ function App() {
           <Range
             min={2}
             max={20}
+            step={2}
             label={"Mozaic Tile"}
             value={mozaicTile}
             onChange={setMozaicTile}
@@ -58,6 +59,7 @@ function App() {
           <Range
             min={0}
             max={10}
+            step={2}
             label={"Padding"}
             value={padding}
             onChange={setPadding}
