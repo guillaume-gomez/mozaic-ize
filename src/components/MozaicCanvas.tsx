@@ -43,14 +43,6 @@ function MozaicCanvas({
     canvasRef.current.width = width;
     canvasRef.current.height = height;
 
-    if( width % (tileSize - padding) !== 0) {
-      throw new Error("Cannot match the width");
-    }
-
-    if( height % (tileSize - padding) !== 0) {
-      throw new Error("Cannot match the height");
-    }
-
     context.clearRect(0,0, width, height);
     context.fillStyle = backgroundColor;
     context.fillRect(0,0, width, height);
