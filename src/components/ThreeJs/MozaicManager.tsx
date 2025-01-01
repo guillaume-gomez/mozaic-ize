@@ -37,7 +37,7 @@ function MozaicManager({
     const geometry = useMemo(() => new BoxGeometry(widthTile, heightTile, 20), [widthTile, heightTile]);
     const material = useMemo(() => {
         return new MeshStandardMaterial({
-            color: "#FFFFFF",
+            //color: "#FFFFFF",
             displacementScale: 0,
             displacementMap,
             normalMap,
