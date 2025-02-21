@@ -28,10 +28,10 @@ function MozaicManager({
   tilesData}: MozaicManagerProps)
 {
     const [displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
-      'plastic_0021/reduced/height_1k.png',
-      'plastic_0021/reduced/normal_1k.png',
-      'plastic_0021/reduced/roughness_1k.jpg',
-      'plastic_0021/reduced/ao_1k.jpg',
+      '/plastic_0021/reduced/height_1k.png',
+      '/plastic_0021/reduced/normal_1k.png',
+      '/plastic_0021/reduced/roughness_1k.jpg',
+      '/plastic_0021/reduced/ao_1k.jpg',
     ]);
     const meshRef = useRef<InstancedMesh>(null);
     const geometry = useMemo(() => new BoxGeometry(widthTile, heightTile, 20), [widthTile, heightTile]);

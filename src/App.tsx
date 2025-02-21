@@ -12,7 +12,7 @@ import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<boolean>('0');
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
