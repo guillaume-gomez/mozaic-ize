@@ -20,7 +20,8 @@ function App() {
   const [padding, setPadding] = useState<number>(1);
   const [width, ] =  useState<number>(1024);
   const [height, ] =  useState<number>(1024);
-  const {generate, tilesData} = useMozaic();
+  const [dataUrl, setDataUrl] = useState<string>("");
+  const {generate, tilesData, fromTilesDataToImage } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
     const resizedImage = resizeImage(newImage, width, height)
@@ -67,6 +68,7 @@ function App() {
         </div>
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+        <img src={dataUrl} />
         <MozaicCanvas
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
@@ -78,7 +80,12 @@ function App() {
         />
         <button
           className="btn btn-primary"
-          onClick={() => generate(image, "normal")}>
+          onClick={async () => {
+            generate(image, "normal");
+            const dataUrl = await fromTilesDataToImage(1024, 1024, 18);
+            console.log(dataUrl)
+            setDataUrl(dataUrl);
+          }}>
           Generate
         </button>
         <div style={{ height: 400 }}>

@@ -6,6 +6,7 @@ import {
     extendPalette,
     fromPaletteToPaletteColor
 } from "../../paletteGenerator";
+import { rgbToHex, toDataURL } from "../../utils";
 
 interface Color {
   red: number;
@@ -21,6 +22,31 @@ export interface TileData {
 
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
+
+    async function fromTilesDataToImage(width: number, height: number, tileSize: number) {
+      const canvas = new OffscreenCanvas(width, height);
+      const context = canvas.getContext("2d");
+      if(tilesData.length === 0) {
+        throw new Error("tilesData are not ready");
+      }
+
+      if(!context) {
+        throw new Error("Cannot find the context");
+      }
+
+      tilesData.forEach(colorData => {
+        const { red, green, blue } = colorData.color;
+        const { x, y } = colorData;
+
+        context.beginPath()
+        context.fillStyle = rgbToHex(red, green, blue);
+        context.rect(x,y, tileSize, tileSize);
+        context.fill();
+      });
+      // Hack-ish
+      const blob = await canvas.convertToBlob();
+      return await toDataURL(blob);
+    }
 
     function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : void {
         const canvasBuffer = document.createElement("canvas");
@@ -139,7 +165,7 @@ function useMozaic() {
       return (redDiff * redDiff) + (greenDiff * greenDiff) + (blueDiff * blueDiff);
     }
 
-  return { generate, tilesData };
+  return { generate, tilesData, fromTilesDataToImage };
 }
 
 export default useMozaic;
