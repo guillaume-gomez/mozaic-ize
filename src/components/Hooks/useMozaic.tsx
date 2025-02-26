@@ -20,16 +20,22 @@ export interface TileData {
   y: number;
 }
 
+const tileSize = 18;
+const padding = 1;
+
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
 
-    async function fromTilesDataToImage(width: number, height: number, tileSize: number) {
-      const canvas = new OffscreenCanvas(width, height);
-      const context = canvas.getContext("2d");
+    async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) {
+      const tilesData = generate(imageOrigin, imageColorMode);
+
       if(tilesData.length === 0) {
         throw new Error("tilesData are not ready");
       }
 
+      const {width, height} = imageOrigin
+      const canvas = new OffscreenCanvas(width, height);
+      const context = canvas.getContext("2d");
       if(!context) {
         throw new Error("Cannot find the context");
       }
@@ -40,7 +46,7 @@ function useMozaic() {
 
         context.beginPath()
         context.fillStyle = rgbToHex(red, green, blue);
-        context.rect(x,y, tileSize, tileSize);
+        context.rect(x,y, tileSize - 2*padding, tileSize - 2*padding);
         context.fill();
       });
       // Hack-ish
@@ -48,11 +54,11 @@ function useMozaic() {
       return await toDataURL(blob);
     }
 
-    function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : void {
+    function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : TileData[] {
         const canvasBuffer = document.createElement("canvas");
         const palette = generateColorPalette(imageOrigin , 20);
         const paletteColor = fromPaletteToPaletteColor(palette);
-        const context = canvasBuffer.getContext('2d');
+        const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
         const {width, height} = imageOrigin
         // create backing canvas
         canvasBuffer.width = width;
@@ -60,8 +66,6 @@ function useMozaic() {
         // restore main canvas
         context.drawImage(imageOrigin, 0,0);
 
-        const tileSize = 18;
-        const padding = 1;
 
         if( width % (tileSize - 2*padding) !== 0) {
           throw new Error("Cannot match the width");
@@ -80,6 +84,7 @@ function useMozaic() {
           paletteColor
         );
         setTilesData(tilesData);
+        return tilesData;
     }
 
     function getColorsImage(

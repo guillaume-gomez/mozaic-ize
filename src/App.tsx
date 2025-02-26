@@ -81,23 +81,19 @@ function App() {
         <button
           className="btn btn-primary"
           onClick={async () => {
-            generate(image, "normal");
-            const dataUrl = await fromTilesDataToImage(1024, 1024, 18);
-            console.log(dataUrl)
+            //generate(image, "normal");
+            const dataUrl = await fromTilesDataToImage(image, "normal");
             setDataUrl(dataUrl);
           }}>
           Generate
         </button>
         <div style={{ height: 400 }}>
-          <ThreeJsRenderer
-            backgroundColor={backgroundColor}
-            widthMozaic={width}
-            heightMozaic={height}
-            widthTile={16}
-            heightTile={16}
-            padding={2}
-            tilesData={tilesData}
-          />
+          {dataUrl !== "" && <ThreeJsRenderer
+              widthMozaic={width}
+              heightMozaic={height}
+              base64Texture={dataUrl}
+            />
+          }
         </div>
         <canvas id="palette" width={512} height={512} />
       </div>

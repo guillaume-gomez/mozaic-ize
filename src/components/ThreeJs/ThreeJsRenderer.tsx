@@ -9,11 +9,7 @@ import { TileData } from "../Hooks/useMozaic";
 interface ThreeJsRendererProps {
   widthMozaic: number;
   heightMozaic: number;
-  widthTile: number;
-  heightTile: number;
-  padding: number
-  backgroundColor: string;
-  tilesData: TileData[];
+  base64Texture: string;
 }
 
 const SCALE = 100;
@@ -21,11 +17,7 @@ const SCALE = 100;
 function ThreejsRenderer({
   widthMozaic,
   heightMozaic,
-  widthTile,
-  heightTile,
-  padding,
-  backgroundColor,
-  tilesData
+  base64Texture
 } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
@@ -45,7 +37,7 @@ function ThreejsRenderer({
         </button>
       </div>
       <Canvas
-        camera={{ position: [0,0.75, 1.5], fov: 75, far: 50 }}
+        camera={{ position: [0,0, 1.5], fov: 75, far: 50 }}
         dpr={window.devicePixelRatio}
         shadows
         onDoubleClick={() => {
@@ -55,16 +47,13 @@ function ThreejsRenderer({
       >
         <color attach="background" args={['#06092c']} />
         { import.meta.env.MODE === "development" ? <Stats/> : <></> }
+        <ambientLight intensity={1.0} />
         <Suspense fallback={<FallBackLoader/>}>
-          <Stage preset="rembrandt" adjustCamera={false} intensity={0.5} environment="studio">
+          <Stage  adjustCamera={false} intensity={1} shadows="contact" environment="city">
              <MozaicManager
-                backgroundColor={backgroundColor}
+                base64Texture={base64Texture}
                 widthMozaic={widthMozaic}
                 heightMozaic={heightMozaic}
-                widthTile={widthTile}
-                heightTile={heightTile}
-                padding={padding}
-                tilesData={tilesData}
              />
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>

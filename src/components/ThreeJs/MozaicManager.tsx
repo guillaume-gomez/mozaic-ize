@@ -2,83 +2,72 @@ import { useMemo, useEffect, useRef } from "react";
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { useLoader } from '@react-three/fiber';
 import { Box } from '@react-three/drei';
-import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color } from 'three';
+import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color, Vector2, RepeatWrapping } from 'three';
 import Tile from "./Tile";
 import { rgbToHex } from "../../utils";
 
 interface MozaicManagerProps {
   widthMozaic: number;
   heightMozaic: number;
-  widthTile: number;
-  heightTile: number;
-  padding: number
-  backgroundColor: string;
-  tilesData: TileData[];
+  base64Texture
 }
 
-const SCALE = 100;
+const geometry = new BoxGeometry(1, 1, 0.1);
+
+const split = 64
+const offset = 0.125
 
 function MozaicManager({
   widthMozaic,
   heightMozaic,
-  widthTile,
-  heightTile,
-  padding,
-  backgroundColor,
-  tilesData}: MozaicManagerProps)
+  base64Texture
+  }: MozaicManagerProps)
 {
-    const [displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
+    const [texture, displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
+      base64Texture,
       '/plastic_0021/reduced/height_1k.png',
       '/plastic_0021/reduced/normal_1k.png',
       '/plastic_0021/reduced/roughness_1k.jpg',
       '/plastic_0021/reduced/ao_1k.jpg',
     ]);
-    const meshRef = useRef<InstancedMesh>(null);
-    const geometry = useMemo(() => new BoxGeometry(widthTile, heightTile, 20), [widthTile, heightTile]);
-    const material = useMemo(() => {
-        return new MeshStandardMaterial({
-            //color: "#FFFFFF",
-            displacementScale: 0,
-            displacementMap,
-            normalMap,
-            roughnessMap,
-            aoMap
-        });
-    },[]);
 
-  useEffect(() => {
-    init();
-  }, [tilesData,  meshRef.current]);
+    normalMap.repeat.set( split, split );
+    normalMap.offset.set( offset, offset );
+    normalMap.wrapS = RepeatWrapping;
+    normalMap.wrapT = RepeatWrapping;
 
+    displacementMap.repeat.set( split, split );
+    displacementMap.offset.set( offset, offset );
+    displacementMap.wrapS = RepeatWrapping;
+    displacementMap.wrapT = RepeatWrapping;
 
-  function init() {
-    if(!meshRef.current) {
-        console.log("not loaded")
-    }
-    tilesData.map(({x, y, color}, index) => {
-      const { red, green, blue } = color;
-      const object = new Object3D();
-      const colorThree = new Color(rgbToHex(red, green, blue));
-      object.position.set(x, -y, 0.1);
-      object.updateMatrix();
-      meshRef.current?.setColorAt(index, colorThree);
-      meshRef.current?.setMatrixAt(index, object.matrix);
-    })
+    roughnessMap.repeat.set( 1, 1 );
+    roughnessMap.wrapS = RepeatWrapping;
+    roughnessMap.wrapT = RepeatWrapping;
 
-    meshRef.current!.instanceMatrix.needsUpdate = true;
-  }
+    aoMap.repeat.set( split, split );
+    aoMap.offset.set( offset, offset );
+    aoMap.wrapS = RepeatWrapping;
+    aoMap.wrapT = RepeatWrapping;
 
-
-    return (
-    <group scale={1/SCALE} position={[-widthMozaic/2/SCALE,heightMozaic/SCALE,0]}>
-      {/*<Box args={[widthMozaic, heightMozaic, 10]} material-color={backgroundColor} />*/}
-          <instancedMesh
-              receiveShadow={true}
-              castShadow={true}
-              ref={meshRef}
-              args={[geometry, material, tilesData.length ]}
-            />
-    </group>
+  return (
+    <mesh
+      scale={1}
+      position={[0,0,0]}
+      geometry={geometry}
+      castShadow
+    >
+      <meshStandardMaterial
+         //attach="material-4"
+         //color="red"
+         map={texture}
+         displacementScale={0}
+         displacementMap={displacementMap}
+         normalMap={normalMap}
+         roughnessMap={roughnessMap}
+         aoMap={aoMap}
+      />
+    </mesh>
     )
 }
 
