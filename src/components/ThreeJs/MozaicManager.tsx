@@ -12,10 +12,10 @@ interface MozaicManagerProps {
   base64Texture
 }
 
-const geometry = new BoxGeometry(1, 1, 0.1);
+const geometry = new BoxGeometry(1, 1, 0.1, 1, 1, 1);
 
-const split = 64
-const offset = 0.125
+const split = 1024/32;
+const offset = 0//0.35
 
 function MozaicManager({
   widthMozaic,
@@ -23,9 +23,8 @@ function MozaicManager({
   base64Texture
   }: MozaicManagerProps)
 {
-    const [texture, displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
+    const [texture, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
       base64Texture,
-      '/plastic_0021/reduced/height_1k.png',
       '/plastic_0021/reduced/normal_1k.png',
       '/plastic_0021/reduced/roughness_1k.jpg',
       '/plastic_0021/reduced/ao_1k.jpg',
@@ -35,11 +34,6 @@ function MozaicManager({
     normalMap.offset.set( offset, offset );
     normalMap.wrapS = RepeatWrapping;
     normalMap.wrapT = RepeatWrapping;
-
-    displacementMap.repeat.set( split, split );
-    displacementMap.offset.set( offset, offset );
-    displacementMap.wrapS = RepeatWrapping;
-    displacementMap.wrapT = RepeatWrapping;
 
     roughnessMap.repeat.set( 1, 1 );
     roughnessMap.wrapS = RepeatWrapping;
@@ -58,14 +52,13 @@ function MozaicManager({
       castShadow
     >
       <meshStandardMaterial
-         //attach="material-4"
-         //color="red"
-         map={texture}
-         displacementScale={0}
-         displacementMap={displacementMap}
-         normalMap={normalMap}
-         roughnessMap={roughnessMap}
-         aoMap={aoMap}
+
+          //attach="material-4"
+          //color="red"
+          map={texture}
+          normalMap={normalMap}
+          roughnessMap={roughnessMap}
+          aoMap={aoMap}
       />
     </mesh>
     )
