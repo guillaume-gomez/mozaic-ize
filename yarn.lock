@@ -1336,10 +1336,10 @@ cwise-compiler@^1.0.0:
   dependencies:
     uniq "^1.0.0"
 
-daisyui@^5.0.0-beta.8:
-  version "5.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.0.0-beta.8.tgz#32aacc5c995460638f1128428ce60d48989c4f15"
-  integrity sha512-jSokqm5i+Pv1jG80wliNzMHjmcF+iMx5xRUpk0/QExVoVNyQNWeCsaWJQubPvUq7bt9nzSsQTR2uIZBoyIIoaA==
+daisyui@^5.0.0:
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.0.9.tgz#d1e549732fcfad258cf8692b56d0f18f2a6a5c96"
+  integrity sha512-RsaehHh45f+0shWgZZaOY09/8eOae2voRsqJCD71j9yrnYgcke0Nj5ys0ZxrW4SPcc4+q96kWyJu0Z8P1zZdoA==
 
 debounce@^1.2.1:
   version "1.2.1"
