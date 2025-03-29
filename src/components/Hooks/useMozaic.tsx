@@ -20,8 +20,13 @@ export interface TileData {
   y: number;
 }
 
-const tileSize = 18;
-const padding = 1;
+// original one
+//const tileSize = 16 + 2;
+//const padding = 1;
+
+// for the test
+const tileSize = 32;
+const padding = 0;
 
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
@@ -40,13 +45,20 @@ function useMozaic() {
         throw new Error("Cannot find the context");
       }
 
+      context.fillStyle = "#FFFFFF";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
       tilesData.forEach(colorData => {
         const { red, green, blue } = colorData.color;
         const { x, y } = colorData;
 
         context.beginPath()
         context.fillStyle = rgbToHex(red, green, blue);
-        context.rect(x,y, tileSize - 2*padding, tileSize - 2*padding);
+        // before
+        //context.rect(x,y, tileSize - 2*padding, tileSize - 2*padding);
+        
+        //after 
+        context.rect(x + 1,y + 1, tileSize - 2, tileSize - 2);
         context.fill();
       });
       // Hack-ish
@@ -74,6 +86,8 @@ function useMozaic() {
         if( height % (tileSize - 2*padding) !== 0) {
           throw new Error("Cannot match the height");
         }
+
+        console.log(width, " ", height)
 
         const tilesData = getColorsImage(
           context,
@@ -170,7 +184,7 @@ function useMozaic() {
       return (redDiff * redDiff) + (greenDiff * greenDiff) + (blueDiff * blueDiff);
     }
 
-  return { generate, tilesData, fromTilesDataToImage };
+  return { generate, tilesData, fromTilesDataToImage, padding, tileSize };
 }
 
 export default useMozaic;

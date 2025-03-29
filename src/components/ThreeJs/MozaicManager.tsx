@@ -15,7 +15,7 @@ interface MozaicManagerProps {
 const geometry = new BoxGeometry(1, 1, 0.1, 1, 1, 1);
 
 const split = 1024/32;
-const offset = 0//0.35
+const offset = 0;
 
 function MozaicManager({
   widthMozaic,
@@ -54,7 +54,7 @@ function MozaicManager({
       <meshStandardMaterial
 
           //attach="material-4"
-          //color="red"
+          color="#AAAAAA"
           map={texture}
           normalMap={normalMap}
           roughnessMap={roughnessMap}

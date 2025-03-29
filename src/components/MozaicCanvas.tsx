@@ -63,7 +63,7 @@ function MozaicCanvas({
         context.beginPath()
         context.strokeStyle = rgbToHex(red-20, green-20, blue-20);
         context.fillStyle = rgbToHex(red, green, blue);
-        context.roundRect(x,y, tileSize, tileSize, 2);
+        context.roundRect(x,y, tileSize - padding*2, tileSize - padding*2, 2);
         context.stroke();
         context.fill();
 
