@@ -16,15 +16,21 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
-  const [mozaicTile, setMozaicTile] = useState<number>(18);
-  const [padding, setPadding] = useState<number>(1);
-  const [width, ] =  useState<number>(1024);
-  const [height, ] =  useState<number>(1024);
+  const [mozaicTile, setMozaicTile] = useState<number>(16);
+  const [padding, setPadding] = useState<number>(0);
+  const [width, setWidth] =  useState<number>(1024);
+  const [height, setHeight] =  useState<number>(1024);
   const {generate, tilesData} = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
-    const resizedImage = resizeImage(newImage, width, height)
+    const expectedWidth = newImage.width + (mozaicTile - (newImage.width % mozaicTile))
+    const expectedHeight = newImage.height + (mozaicTile - (newImage.height % mozaicTile))
+    
+    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight)
     setImage(resizedImage);
+
+    setWidth(expectedWidth);
+    setWidth(expectedHeight);
   }
 
   return (
@@ -40,7 +46,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite + React (oublie pas la branche optimization)</h1>
       <div className="form">
         <div>
           <label>BackgroundColor</label>
@@ -73,8 +79,8 @@ function App() {
         <MozaicCanvas
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
-          tileSize={18}
-          padding={2}
+          tileSize={mozaicTile}
+          padding={padding}
           tilesData={tilesData}
           width={width}
           height={height}
