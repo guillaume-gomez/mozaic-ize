@@ -16,22 +16,32 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
-  //const [mozaicTile, setMozaicTile] = useState<number>(18);
-  //const [padding, setPadding] = useState<number>(1);
-  const [width, ] =  useState<number>(1024);
-  const [height, ] =  useState<number>(1024);
+  const [width, setWidth] =  useState<number>(1024);
+  const [height, setHeight] =  useState<number>(1024);
   const [dataUrl, setDataUrl] = useState<string>("");
   const {generate, tilesData, fromTilesDataToImage, padding, tileSize } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
-    const resizedImage = resizeImage(newImage, width, height)
+    /*const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
+    const expectedHeight = newImage.height + (tileSize - (newImage.height % tileSize))
+    
+    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
+
+    setWidth(expectedWidth);
+    setHeight(expectedHeight);*/
+
+    //to debug
+    const resizedImage = resizeImage(newImage, width, height);
+    setImage(resizedImage);
+
+
   }
 
   return (
     <>
       <div>
-        <h1 class="text-3xl font-bold underline">
+        <h1 className="text-3xl font-bold underline">
           Hello world!
         </h1>
         <a href="https://vite.dev" target="_blank">
@@ -41,7 +51,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite + React (oublie pas la branche optimization)</h1>
       <div className="form">
         <div>
           <label>BackgroundColor</label>
@@ -76,7 +86,7 @@ function App() {
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
           tileSize={tileSize}
-          padding={padding}
+          padding={2}
           tilesData={tilesData}
           width={width}
           height={height}
