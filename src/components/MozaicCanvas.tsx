@@ -82,7 +82,7 @@ function MozaicCanvas({
               value={shadowBlur}
               onChange={setShadowBlur}
             />
-            <canvas ref={canvasRef} width={512} height={512}/>
+            <canvas ref={canvasRef} width={width} height={height}/>
         </div>
     )
 }
