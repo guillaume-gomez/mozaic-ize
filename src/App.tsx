@@ -26,11 +26,11 @@ function App() {
     const expectedWidth = newImage.width + (mozaicTile - (newImage.width % mozaicTile))
     const expectedHeight = newImage.height + (mozaicTile - (newImage.height % mozaicTile))
     
-    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight)
+    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
 
     setWidth(expectedWidth);
-    setWidth(expectedHeight);
+    setHeight(expectedHeight);
   }
 
   return (
@@ -79,8 +79,8 @@ function App() {
         <MozaicCanvas
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
-          tileSize={mozaicTile}
-          padding={padding}
+          tileSize={16}
+          padding={2}
           tilesData={tilesData}
           width={width}
           height={height}
