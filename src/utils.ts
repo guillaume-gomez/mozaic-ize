@@ -53,6 +53,10 @@ export function resizeImage(image: HTMLImageElement, expectedWidth: number, expe
   resizeImageCanvas(canvasBuffer, canvasTarget, expectedWidth, expectedHeight);
 
   const resizedImage = new Image();
+  
+  resizedImage.width = expectedWidth;
+  resizedImage.height = expectedHeight;
+
   resizedImage.onload = () => {};
   resizedImage.src = canvasTarget.toDataURL();
   return resizedImage;
