@@ -6,6 +6,7 @@ import {
     extendPalette,
     fromPaletteToPaletteColor
 } from "../../paletteGenerator";
+import { rgbToHex, toDataURL } from "../../utils";
 
 interface Color {
   red: number;
@@ -19,14 +20,48 @@ export interface TileData {
   y: number;
 }
 
+const tileSize = 32;
+const padding = 2;
+
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
 
-    function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : void {
+    async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) {
+      const tilesData = generate(imageOrigin, imageColorMode);
+
+      if(tilesData.length === 0) {
+        throw new Error("tilesData are not ready");
+      }
+
+      const {width, height} = imageOrigin
+      const canvas = new OffscreenCanvas(width, height);
+      const context = canvas.getContext("2d");
+      if(!context) {
+        throw new Error("Cannot find the context");
+      }
+
+      context.fillStyle = "#FFFFFF";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      tilesData.forEach(colorData => {
+        const { red, green, blue } = colorData.color;
+        const { x, y } = colorData;
+
+        context.beginPath()
+        context.fillStyle = rgbToHex(red, green, blue);
+        context.roundRect(x,y, tileSize - padding, tileSize - padding, 2);
+        context.fill();
+      });
+      // Hack-ish
+      const blob = await canvas.convertToBlob();
+      return await toDataURL(blob);
+    }
+
+    function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : TileData[] {
         const canvasBuffer = document.createElement("canvas");
         const palette = generateColorPalette(imageOrigin , 20);
         const paletteColor = fromPaletteToPaletteColor(palette);
-        const context = canvasBuffer.getContext('2d');
+        const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
         const {width, height} = imageOrigin
         // create backing canvas
         canvasBuffer.width = width;
@@ -34,14 +69,12 @@ function useMozaic() {
         // restore main canvas
         context.drawImage(imageOrigin, 0,0);
 
-        const tileSize = 18;
-        const padding = 1;
 
-        if( width % (tileSize - 2*padding) !== 0) {
+        if( width % (tileSize) !== 0) {
           throw new Error("Cannot match the width");
         }
 
-        if( height % (tileSize - 2*padding) !== 0) {
+        if( height % (tileSize) !== 0) {
           throw new Error("Cannot match the height");
         }
 
@@ -54,6 +87,7 @@ function useMozaic() {
           paletteColor
         );
         setTilesData(tilesData);
+        return tilesData;
     }
 
     function getColorsImage(
@@ -65,13 +99,14 @@ function useMozaic() {
       paletteColor: Color[],
       imageColorMode: string) : TileData[] {
       const tilesData: TileData[] = [];
-      for(let x = padding; x < width; x+= (tileSize + padding) ) {
-        for(let y = padding; y < height; y+= (tileSize + padding) ) {
-          const color = computeColor(context, tileSize - (2*padding), x + padding, y + padding, paletteColor, imageColorMode);
+
+      for(let x = padding/2; x < width; x+= (tileSize) ) {
+        for(let y = padding/2; y < height; y+= (tileSize) ) {
+          const color = computeColor(context, tileSize, x - padding, y - padding, paletteColor, imageColorMode);
           tilesData.push({
             color,
-            x: x + padding,
-            y: y + padding,
+            x,
+            y,
           }
           );
         }
@@ -139,7 +174,7 @@ function useMozaic() {
       return (redDiff * redDiff) + (greenDiff * greenDiff) + (blueDiff * blueDiff);
     }
 
-  return { generate, tilesData };
+  return { generate, tilesData, fromTilesDataToImage, padding, tileSize };
 }
 
 export default useMozaic;

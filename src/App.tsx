@@ -16,21 +16,26 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
-  const [mozaicTile, setMozaicTile] = useState<number>(16);
-  const [padding, setPadding] = useState<number>(0);
   const [width, setWidth] =  useState<number>(1024);
   const [height, setHeight] =  useState<number>(1024);
-  const {generate, tilesData} = useMozaic();
+  const [dataUrl, setDataUrl] = useState<string>("");
+  const {generate, tilesData, fromTilesDataToImage, padding, tileSize } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
-    const expectedWidth = newImage.width + (mozaicTile - (newImage.width % mozaicTile))
-    const expectedHeight = newImage.height + (mozaicTile - (newImage.height % mozaicTile))
+    const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
+    const expectedHeight = newImage.height + (tileSize - (newImage.height % tileSize))
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
 
     setWidth(expectedWidth);
     setHeight(expectedHeight);
+
+    //to debug
+    //const resizedImage = resizeImage(newImage, width, height);
+    //setImage(resizedImage);
+
+
   }
 
   return (
@@ -57,7 +62,7 @@ function App() {
           />
         </div>
         <div>
-          <Range
+          {/*<Range
             min={2}
             max={20}
             step={2}
@@ -72,14 +77,15 @@ function App() {
             label={"Padding"}
             value={padding}
             onChange={setPadding}
-          />
+          />*/}
         </div>
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+        <img src={dataUrl} />
         <MozaicCanvas
           backgroundColor={backgroundColor}
           imageColorMode={imageColorMode}
-          tileSize={16}
+          tileSize={tileSize}
           padding={2}
           tilesData={tilesData}
           width={width}
@@ -87,19 +93,21 @@ function App() {
         />
         <button
           className="btn btn-primary"
-          onClick={() => generate(image, "normal")}>
+          onClick={async () => {
+            //generate(image, "normal");
+            const dataUrl = await fromTilesDataToImage(image, "normal");
+            setDataUrl(dataUrl);
+          }}>
           Generate
         </button>
         <div style={{ height: 400 }}>
-          <ThreeJsRenderer
-            backgroundColor={backgroundColor}
-            widthMozaic={width}
-            heightMozaic={height}
-            widthTile={16}
-            heightTile={16}
-            padding={2}
-            tilesData={tilesData}
-          />
+          {dataUrl !== "" && <ThreeJsRenderer
+              widthMozaic={width}
+              heightMozaic={height}
+              base64Texture={dataUrl}
+              tilesData={tilesData}
+            />
+          }
         </div>
         <canvas id="palette" width={512} height={512} />
       </div>
