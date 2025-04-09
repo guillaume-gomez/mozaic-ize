@@ -20,13 +20,8 @@ export interface TileData {
   y: number;
 }
 
-// original one
-//const tileSize = 16 + 2;
-//const padding = 1;
-
-// for the test
 const tileSize = 32;
-const padding = 0;
+const padding = 2;
 
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
@@ -54,11 +49,7 @@ function useMozaic() {
 
         context.beginPath()
         context.fillStyle = rgbToHex(red, green, blue);
-        // before
-        //context.rect(x,y, tileSize - 2*padding, tileSize - 2*padding);
-        
-        //after 
-        context.rect(x + 1,y + 1, tileSize - 2, tileSize - 2);
+        context.roundRect(x,y, tileSize - padding, tileSize - padding, 2);
         context.fill();
       });
       // Hack-ish
@@ -79,15 +70,13 @@ function useMozaic() {
         context.drawImage(imageOrigin, 0,0);
 
 
-        if( width % (tileSize - 2*padding) !== 0) {
+        if( width % (tileSize) !== 0) {
           throw new Error("Cannot match the width");
         }
 
-        if( height % (tileSize - 2*padding) !== 0) {
+        if( height % (tileSize) !== 0) {
           throw new Error("Cannot match the height");
         }
-
-        console.log(width, " ", height)
 
         const tilesData = getColorsImage(
           context,
@@ -110,13 +99,14 @@ function useMozaic() {
       paletteColor: Color[],
       imageColorMode: string) : TileData[] {
       const tilesData: TileData[] = [];
-      for(let x = padding; x < width; x+= (tileSize + padding) ) {
-        for(let y = padding; y < height; y+= (tileSize + padding) ) {
-          const color = computeColor(context, tileSize - (2*padding), x + padding, y + padding, paletteColor, imageColorMode);
+
+      for(let x = padding/2; x < width; x+= (tileSize) ) {
+        for(let y = padding/2; y < height; y+= (tileSize) ) {
+          const color = computeColor(context, tileSize, x - padding, y - padding, paletteColor, imageColorMode);
           tilesData.push({
             color,
-            x: x + padding,
-            y: y + padding,
+            x,
+            y,
           }
           );
         }

@@ -22,18 +22,18 @@ function App() {
   const {generate, tilesData, fromTilesDataToImage, padding, tileSize } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
-    /*const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
+    const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
     const expectedHeight = newImage.height + (tileSize - (newImage.height % tileSize))
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
 
     setWidth(expectedWidth);
-    setHeight(expectedHeight);*/
+    setHeight(expectedHeight);
 
     //to debug
-    const resizedImage = resizeImage(newImage, width, height);
-    setImage(resizedImage);
+    //const resizedImage = resizeImage(newImage, width, height);
+    //setImage(resizedImage);
 
 
   }
