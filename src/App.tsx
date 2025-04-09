@@ -105,6 +105,7 @@ function App() {
               widthMozaic={width}
               heightMozaic={height}
               base64Texture={dataUrl}
+              tilesData={tilesData}
             />
           }
         </div>

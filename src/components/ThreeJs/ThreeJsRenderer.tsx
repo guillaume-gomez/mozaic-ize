@@ -4,12 +4,14 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
+import MozaicInstanceMesh from "./MozaicInstanceMesh";
 import { TileData } from "../Hooks/useMozaic";
 
 interface ThreeJsRendererProps {
   widthMozaic: number;
   heightMozaic: number;
   base64Texture: string;
+  tilesData: TileData[];
 }
 
 const SCALE = 100;
@@ -17,7 +19,8 @@ const SCALE = 100;
 function ThreejsRenderer({
   widthMozaic,
   heightMozaic,
-  base64Texture
+  base64Texture,
+  tilesData
 } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
@@ -54,6 +57,14 @@ function ThreejsRenderer({
                 base64Texture={base64Texture}
                 widthMozaic={widthMozaic}
                 heightMozaic={heightMozaic}
+             />
+             <MozaicInstanceMesh
+                width={widthMozaic}
+                height={heightMozaic}
+                tile={32}
+                padding={0}
+                backgroundColor={"red"}
+                tilesData={tilesData}
              />
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>

@@ -12,7 +12,7 @@ interface MozaicManagerProps {
   base64Texture
 }
 
-const geometry = new BoxGeometry(1, 1, 0.1, 1, 1, 1);
+const geometry = new BoxGeometry(1, 1, 0.2, 1, 1, 1);
 
 const split = 1024/32;
 const offset = 0;
@@ -30,7 +30,7 @@ function MozaicManager({
       '/plastic_0021/reduced/ao_1k.jpg',
     ]);
 
-    normalMap.repeat.set( split, split );
+    normalMap.repeat.set( widthMozaic/32, heightMozaic/32 );
     normalMap.offset.set( offset, offset );
     normalMap.wrapS = RepeatWrapping;
     normalMap.wrapT = RepeatWrapping;
@@ -39,23 +39,29 @@ function MozaicManager({
     roughnessMap.wrapS = RepeatWrapping;
     roughnessMap.wrapT = RepeatWrapping;
 
-    aoMap.repeat.set( split, split );
+    aoMap.repeat.set( widthMozaic/32, heightMozaic/32 );
     aoMap.offset.set( offset, offset );
     aoMap.wrapS = RepeatWrapping;
     aoMap.wrapT = RepeatWrapping;
 
   return (
     <mesh
-      scale={1}
+      scale={[1,heightMozaic/widthMozaic,1]}
       position={[0,0,0]}
       geometry={geometry}
       castShadow
     >
+      <meshStandardMaterial attach="material-0" color="brown" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-1" color="red" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-2" color="green" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-3" color="purple" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-5" color="orange" />
       <meshStandardMaterial
 
-          //attach="material-4"
+          attach="material-4"
           color="#AAAAAA"
           map={texture}
+          // debug map={normalMap}
           normalMap={normalMap}
           roughnessMap={roughnessMap}
           aoMap={aoMap}
