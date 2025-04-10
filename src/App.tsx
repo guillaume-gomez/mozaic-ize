@@ -88,6 +88,7 @@ function App() {
             onChange={setPadding}
           />
         </div>
+        <InputFileWithPreview onChange={uploadImage} value={image} />
         <button
           className="btn btn-primary"
           onClick={async () => {
@@ -115,12 +116,14 @@ function App() {
               heightMozaic={height}
               base64Texture={dataUrl}
               tilesData={tilesData}
+              tileSize={tileSize}
+              padding={padding}
+              backgroundColor={backgroundColor}
             />
           }
         </div>
         <canvas id="palette" width={512} height={512} />
       </div>
-      <InputFileWithPreview onChange={uploadImage} value={image} />
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

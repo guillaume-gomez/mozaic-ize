@@ -32,7 +32,7 @@ function MozaicInstanceMesh({
       '/plastic_0021/reduced/ao_1k.jpg',
     ]);
     const meshRef = useRef<InstancedMesh>(null);
-    const geometry = useMemo(() => new BoxGeometry(tile, tile, 20), [tile, tile]);
+    const geometry = useMemo(() => new BoxGeometry(tile - padding, tile - padding, tile - padding), [tile, padding]);
     const material = useMemo(() => {
         return new MeshStandardMaterial({
             //color: "#FFFFFF",
@@ -67,17 +67,24 @@ function MozaicInstanceMesh({
   }
 
 
-    return (
-    <group scale={1/SCALE} position={[-width/2/SCALE,height/SCALE,0]}>
-      {/*<Box args={[widthMozaic, heightMozaic, 10]} material-color={backgroundColor} />*/}
-          <instancedMesh
-              receiveShadow={true}
-              castShadow={true}
-              ref={meshRef}
-              args={[geometry, material, tilesData.length ]}
-            />
+  return (
+    <group
+      scale={1/SCALE}
+      position={[-width/2/SCALE,height/2/SCALE,0]}
+    >
+      <Box
+        args={[width, height, tile/4]}
+        material-color={backgroundColor}
+        position={[width/2-padding,-height/2 + padding,0]}
+      />
+      <instancedMesh
+          receiveShadow={true}
+          castShadow={true}
+          ref={meshRef}
+          args={[geometry, material, tilesData.length ]}
+        />
     </group>
-    )
+  )
 }
 
 export default MozaicInstanceMesh;

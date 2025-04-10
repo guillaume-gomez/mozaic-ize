@@ -12,6 +12,9 @@ interface ThreeJsRendererProps {
   heightMozaic: number;
   base64Texture: string;
   tilesData: TileData[];
+  padding: number;
+  tileSize: number;
+  backgroundColor: string;
 }
 
 const SCALE = 100;
@@ -20,7 +23,10 @@ function ThreejsRenderer({
   widthMozaic,
   heightMozaic,
   base64Texture,
-  tilesData
+  tilesData,
+  padding,
+  tileSize,
+  backgroundColor
 } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
@@ -40,7 +46,7 @@ function ThreejsRenderer({
         </button>
       </div>
       <Canvas
-        camera={{ position: [0,0, 1.5], fov: 75, far: 50 }}
+        camera={{ position: [0,0, 1.5], fov: 75, far: 2000 }}
         dpr={window.devicePixelRatio}
         shadows
         onDoubleClick={() => {
@@ -61,9 +67,9 @@ function ThreejsRenderer({
              <MozaicInstanceMesh
                 width={widthMozaic}
                 height={heightMozaic}
-                tile={32}
-                padding={0}
-                backgroundColor={"red"}
+                tile={tileSize}
+                padding={padding}
+                backgroundColor={backgroundColor}
                 tilesData={tilesData}
              />
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
