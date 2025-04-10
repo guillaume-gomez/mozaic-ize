@@ -14,7 +14,7 @@ interface MozaicManagerProps {
 
 const geometry = new BoxGeometry(1, 1, 0.2, 1, 1, 1);
 
-const split = 1024/32;
+const tileSize = 32;
 const offset = 0;
 
 function MozaicManager({
@@ -30,7 +30,7 @@ function MozaicManager({
       '/plastic_0021/reduced/ao_1k.jpg',
     ]);
 
-    normalMap.repeat.set( widthMozaic/32, heightMozaic/32 );
+    normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
     normalMap.offset.set( offset, offset );
     normalMap.wrapS = RepeatWrapping;
     normalMap.wrapT = RepeatWrapping;
@@ -39,7 +39,7 @@ function MozaicManager({
     roughnessMap.wrapS = RepeatWrapping;
     roughnessMap.wrapT = RepeatWrapping;
 
-    aoMap.repeat.set( widthMozaic/32, heightMozaic/32 );
+    aoMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
     aoMap.offset.set( offset, offset );
     aoMap.wrapS = RepeatWrapping;
     aoMap.wrapT = RepeatWrapping;
