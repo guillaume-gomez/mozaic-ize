@@ -20,11 +20,10 @@ export interface TileData {
   y: number;
 }
 
-const tileSize = 32;
-const padding = 2;
-
 function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
+  const [tileSize, setTileSize] = useState<number>(32);
+  const [padding, setPadding] = useState<number>(2);
 
     async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) {
       const tilesData = generate(imageOrigin, imageColorMode);
@@ -174,7 +173,15 @@ function useMozaic() {
       return (redDiff * redDiff) + (greenDiff * greenDiff) + (blueDiff * blueDiff);
     }
 
-  return { generate, tilesData, fromTilesDataToImage, padding, tileSize };
+  return { 
+    generate,
+    tilesData,
+    fromTilesDataToImage,
+    padding,
+    tileSize,
+    setPadding,
+    setTileSize
+  };
 }
 
 export default useMozaic;

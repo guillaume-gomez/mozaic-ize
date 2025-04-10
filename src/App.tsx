@@ -19,7 +19,15 @@ function App() {
   const [width, setWidth] =  useState<number>(1024);
   const [height, setHeight] =  useState<number>(1024);
   const [dataUrl, setDataUrl] = useState<string>("");
-  const {generate, tilesData, fromTilesDataToImage, padding, tileSize } = useMozaic();
+  const {
+    generate,
+    tilesData,
+    fromTilesDataToImage,
+    padding,
+    tileSize,
+    setPadding,
+    setTileSize
+  } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
     const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
@@ -62,13 +70,13 @@ function App() {
           />
         </div>
         <div>
-          {/*<Range
+          <Range
             min={2}
             max={20}
             step={2}
             label={"Mozaic Tile"}
-            value={mozaicTile}
-            onChange={setMozaicTile}
+            value={tileSize}
+            onChange={setTileSize}
           />
           <Range
             min={0}
@@ -77,7 +85,7 @@ function App() {
             label={"Padding"}
             value={padding}
             onChange={setPadding}
-          />*/}
+          />
         </div>
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
