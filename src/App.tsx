@@ -15,7 +15,6 @@ function App() {
   const [count, setCount] = useState<boolean>('0');
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
-  const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
   const [width, setWidth] =  useState<number>(1024);
   const [height, setHeight] =  useState<number>(1024);
   const [dataUrl, setDataUrl] = useState<string>("");
@@ -25,8 +24,10 @@ function App() {
     fromTilesDataToImage,
     padding,
     tileSize,
+    backgroundColor,
     setPadding,
-    setTileSize
+    setTileSize,
+    setBackgroundColor
   } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
@@ -80,25 +81,13 @@ function App() {
           />
           <Range
             min={0}
-            max={10}
+            max={tileSize - 20}
             step={2}
             label={"Padding"}
             value={padding}
             onChange={setPadding}
           />
         </div>
-      </div>
-      <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-        <img src={dataUrl} />
-        <MozaicCanvas
-          backgroundColor={backgroundColor}
-          imageColorMode={imageColorMode}
-          tileSize={tileSize}
-          padding={2}
-          tilesData={tilesData}
-          width={width}
-          height={height}
-        />
         <button
           className="btn btn-primary"
           onClick={async () => {
@@ -108,6 +97,18 @@ function App() {
           }}>
           Generate
         </button>
+      </div>
+      <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+        <img src={dataUrl} />
+        <MozaicCanvas
+          backgroundColor={backgroundColor}
+          imageColorMode={imageColorMode}
+          tileSize={tileSize}
+          padding={padding}
+          tilesData={tilesData}
+          width={width}
+          height={height}
+        />
         <div style={{ height: 400 }}>
           {dataUrl !== "" && <ThreeJsRenderer
               widthMozaic={width}

@@ -24,6 +24,7 @@ function useMozaic() {
   const [tilesData, setTilesData] = useState<TileData[]>([]);
   const [tileSize, setTileSize] = useState<number>(32);
   const [padding, setPadding] = useState<number>(2);
+  const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
 
     async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) {
       const tilesData = generate(imageOrigin, imageColorMode);
@@ -39,7 +40,7 @@ function useMozaic() {
         throw new Error("Cannot find the context");
       }
 
-      context.fillStyle = "#FFFFFF";
+      context.fillStyle = backgroundColor;
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       tilesData.forEach(colorData => {
@@ -179,8 +180,10 @@ function useMozaic() {
     fromTilesDataToImage,
     padding,
     tileSize,
+    backgroundColor,
     setPadding,
-    setTileSize
+    setTileSize,
+    setBackgroundColor
   };
 }
 
