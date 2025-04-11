@@ -49,7 +49,7 @@ function useMozaic() {
 
         context.beginPath()
         context.fillStyle = rgbToHex(red, green, blue);
-        context.roundRect(x,y, tileSize - padding, tileSize - padding, 2);
+        context.roundRect(x,y, tileSize - padding, tileSize - padding, 2 * 1/tileSize);
         context.fill();
       });
       // Hack-ish
