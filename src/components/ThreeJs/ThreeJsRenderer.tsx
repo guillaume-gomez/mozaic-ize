@@ -1,4 +1,4 @@
-import { useRef, Suspense, useEffect } from 'react';
+import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats } from '@react-three/drei';
@@ -33,6 +33,7 @@ function ThreejsRenderer({
     toggleFullscreen,
     isFullscreenEnabled
   } = useFullscreen({ target: canvasContainerRef });
+  const [optimized, setOptimized] = useState<boolean>(false);
 
   function handleGenerate() {
 
@@ -59,19 +60,24 @@ function ThreejsRenderer({
         <ambientLight intensity={1.0} />
         <Suspense fallback={<FallBackLoader/>}>
           <Stage  adjustCamera={false} intensity={1} shadows="contact" environment="city">
-             <MozaicManager
-                base64Texture={base64Texture}
-                widthMozaic={widthMozaic}
-                heightMozaic={heightMozaic}
-             />
-             <MozaicInstanceMesh
-                width={widthMozaic}
-                height={heightMozaic}
-                tile={tileSize}
-                padding={padding}
-                backgroundColor={backgroundColor}
-                tilesData={tilesData}
-             />
+             {
+              optimized ? 
+               <MozaicManager
+                  base64Texture={base64Texture}
+                  widthMozaic={widthMozaic}
+                  heightMozaic={heightMozaic}
+                  tileSize={tileSize}
+                  padding={padding}
+               /> : 
+               <MozaicInstanceMesh
+                  width={widthMozaic}
+                  height={heightMozaic}
+                  tileSize={tileSize}
+                  padding={padding}
+                  backgroundColor={backgroundColor}
+                  tilesData={tilesData}
+               />
+             }
              <Grid args={[50, 50]} position={[0,0,0]} cellColor='white' />
           </Stage>
         </Suspense>
