@@ -5,6 +5,12 @@ const PALETTE_BASE_COLOR = 20;
 type pixel = [number, number, number];
 type colorType = [number, number, number];
 
+export interface ExtendedPalette {
+  normal: pixel[20];
+  saturated: pixel[20];
+  hue: pixel[20];
+}
+
 function saturate([hue, saturation, lightness]: colorType, x: number) : colorType {
   return [hue, Math.min(100, saturation + x), lightness];
 }
@@ -21,7 +27,7 @@ export function generateColorPalette(image: HTMLImageElement, paletteSize: numbe
   return colorThief.getPalette(image, paletteSize);
 }
 
-export function extendPalette(palette: pixel[], saturationLevel: number = 20, hueLevel: number = 20 ) : pixel[] {
+export function extendPalette(palette: pixel[], saturationLevel: number = 20, hueLevel: number = 20 ) : ExtendedPalette {
   const moreSaturatedPalette = palette.map(([red, green, blue]) => {
     const [hue, saturation, lightness] = convert.rgb.hsl(red, green, blue);
     const [_, moreSaturated, __] = saturate([hue, saturation, lightness], saturationLevel);
@@ -37,7 +43,11 @@ export function extendPalette(palette: pixel[], saturationLevel: number = 20, hu
       return convert.hsl.rgb([newHue, saturation, lightness]);
     });
   }
-  return [...palette.slice(0), ...moreSaturatedPalette, ...moreHuePaletteGenerator(), ...moreHuePaletteGenerator()];
+  return {
+    original: fromPaletteToPaletteColor(palette.slice(0)),
+    saturated: fromPaletteToPaletteColor(moreSaturatedPalette),
+    hue: fromPaletteToPaletteColor(moreHuePaletteGenerator())
+  };
 }
 
 export function fromPaletteToPaletteColor(palette: pixel[]) : Color[] {
