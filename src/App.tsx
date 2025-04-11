@@ -39,13 +39,13 @@ function App() {
 
     setWidth(expectedWidth);
     setHeight(expectedHeight);
-
-    //to debug
-    //const resizedImage = resizeImage(newImage, width, height);
-    //setImage(resizedImage);
-
-
   }
+
+  useEffect(() => {
+    if(image) {
+      uploadImage(image);
+    }
+  }, [tileSize])
 
   return (
     <>
@@ -72,9 +72,9 @@ function App() {
         </div>
         <div>
           <Range
-            min={2}
-            max={20}
-            step={2}
+            min={16}
+            max={128}
+            step={8}
             label={"Mozaic Tile"}
             value={tileSize}
             onChange={setTileSize}
