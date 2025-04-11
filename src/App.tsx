@@ -13,6 +13,7 @@ import useMozaic from "./components/Hooks/useMozaic";
 
 function App() {
   const [count, setCount] = useState<boolean>('0');
+  const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [image, setImage] = useState<HTMLImageElement>();
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [width, setWidth] =  useState<number>(1024);
@@ -39,11 +40,13 @@ function App() {
 
     setWidth(expectedWidth);
     setHeight(expectedHeight);
+
+    setOriginalImage(newImage);
   }
 
   useEffect(() => {
-    if(image) {
-      uploadImage(image);
+    if(originalImage) {
+      uploadImage(originalImage);
     }
   }, [tileSize])
 
