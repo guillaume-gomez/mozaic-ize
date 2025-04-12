@@ -11,7 +11,6 @@ import { rgbToHex } from "../utils";
 
 interface MozaicCanvasProps {
     backgroundColor: string;
-    imageColorMode: string;
     tileSize: number;
     padding: number;
     tilesData: TileData[];
@@ -21,7 +20,6 @@ interface MozaicCanvasProps {
 
 function MozaicCanvas({
   backgroundColor,
-  imageColorMode,
   tileSize,
   padding,
   tilesData,
