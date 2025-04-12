@@ -9,18 +9,23 @@ import { rgbToHex } from "../../utils";
 interface MozaicManagerProps {
   widthMozaic: number;
   heightMozaic: number;
-  base64Texture
+  base64Texture: string;
+  tileSize: number;
+  padding: number;
 }
 
 const geometry = new BoxGeometry(1, 1, 0.2, 1, 1, 1);
 
-const tileSize = 32;
 const offset = 0;
+
+const SCALE = 10
 
 function MozaicManager({
   widthMozaic,
   heightMozaic,
-  base64Texture
+  base64Texture,
+  tileSize,
+  padding
   }: MozaicManagerProps)
 {
     const [texture, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
@@ -46,7 +51,7 @@ function MozaicManager({
 
   return (
     <mesh
-      scale={[1,heightMozaic/widthMozaic,1]}
+      scale={[SCALE,SCALE * (heightMozaic/widthMozaic),2]}
       position={[0,0,0]}
       geometry={geometry}
       castShadow
