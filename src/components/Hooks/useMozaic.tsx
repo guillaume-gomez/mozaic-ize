@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { minBy } from "lodash";
+import { minBy, findIndex, sample } from "lodash";
 import {
     generateColorPalette,
     drawPalette,
     extendPalette,
-    fromPaletteToPaletteColor
+    fromPaletteToPaletteColor,
+    ExtendedPalette
 } from "../../paletteGenerator";
 import { rgbToHex, toDataURL } from "../../utils";
 
@@ -60,7 +61,7 @@ function useMozaic() {
     function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : TileData[] {
         const canvasBuffer = document.createElement("canvas");
         const palette = generateColorPalette(imageOrigin , 20);
-        const paletteColor = fromPaletteToPaletteColor(palette);
+        const extendedPalette = extendPalette(palette, 20, 20);
         const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
         const {width, height} = imageOrigin
         // create backing canvas
@@ -84,7 +85,8 @@ function useMozaic() {
           height,
           tileSize,
           padding,
-          paletteColor
+          extendedPalette,
+          imageColorMode
         );
         setTilesData(tilesData);
         return tilesData;
@@ -96,13 +98,13 @@ function useMozaic() {
       height: number,
       tileSize: number,
       padding: number,
-      paletteColor: Color[],
+      extendedPalette: ExtendedPalette[],
       imageColorMode: string) : TileData[] {
       const tilesData: TileData[] = [];
 
       for(let x = padding/2; x < width; x+= (tileSize) ) {
         for(let y = padding/2; y < height; y+= (tileSize) ) {
-          const color = computeColor(context, tileSize, x - padding, y - padding, paletteColor, imageColorMode);
+          const color = computeColor(context, tileSize, x - padding, y - padding, extendedPalette, imageColorMode);
           tilesData.push({
             color,
             x,
@@ -119,17 +121,16 @@ function useMozaic() {
       tileSize: number,
       x: number,
       y: number,
-      paletteColor: Color[],
+      extendedPalette: ExtendedPalette,
       imageColorMode: string
     ) {
+
       if(imageColorMode ==="normal") {
         return interpolateArea(context, tileSize, x, y);
       }
 
-      return fromColorToDominantColor(
-          interpolateArea(context, tileSize, x, y),
-          paletteColor
-      );
+      // using the palette to randomize the chosen color
+      return findColorWithRandomness(context, tileSize, x, y, extendedPalette);
     }
 
 
@@ -165,6 +166,21 @@ function useMozaic() {
         throw new Error("Cannot find the color");
       }
       return foundColor.colorPalette;
+    }
+
+    function findColorWithRandomness(
+      context: CanvasRenderingContext2D,
+      tileSize: number,
+      x: number,
+      y: number,
+      extendedPalette: ExtendedPalette) {
+      const foundColor = fromColorToDominantColor(
+          interpolateArea(context, tileSize, x, y),
+          extendedPalette.original
+        );
+      const colorIndex = findIndex(extendedPalette.original, foundColor);
+      const randomTypeOfPalette = sample(["original", "original", "original", "hue", "saturated"]);
+      return extendedPalette[randomTypeOfPalette][colorIndex];
     }
 
     function colorDistance(color1: Color, color2: Color) : number {
