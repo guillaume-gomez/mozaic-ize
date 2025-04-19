@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
-import { minBy } from "lodash";
 import imageTest from "/lifesaver_opaque.jpg";
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
+import ColorPicker from "./components/ColorPicker";
 import Range from "./components/Range";
+import Select from "./components/Select";
 import { generateColorPalette, drawPalette, extendPalette, fromPaletteToPaletteColor } from "./paletteGenerator";
 import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
@@ -15,6 +16,7 @@ function App() {
   const [count, setCount] = useState<boolean>('0');
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [image, setImage] = useState<HTMLImageElement>();
+  const [twoDimention, setTwoDimention] =  useState<boolean>(false);
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [width, setWidth] =  useState<number>(1024);
   const [height, setHeight] =  useState<number>(1024);
@@ -63,16 +65,12 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React (oublie pas la branche optimization)</h1>
+      <h1>Vite + React</h1>
       <div className="form">
-        <div>
-          <label>BackgroundColor</label>
-          <input
-            type="color"
-            value={backgroundColor}
-            onChange={(e) => setBackgroundColor(e.target.value)}
-          />
-        </div>
+       <ColorPicker
+        label={"BackgroundColor"}
+        onChange={(color) => setBackgroundColor(color)}
+        value={backgroundColor} />
         <div>
           <Range
             min={16}
@@ -92,28 +90,36 @@ function App() {
           />
         </div>
         <InputFileWithPreview onChange={uploadImage} value={image} />
+        <Select
+          label="Mode of generation"
+          value={imageColorMode}
+          onChange={(imageColorMode) => setImageColorMode(imageColorMode)}
+          options={[
+            {label: "Normal", value: "normal"},
+            {label: "Random", value: "random"},
+          ]}
+        />
         <button
           className="btn btn-primary"
           onClick={async () => {
             //generate(image, "normal");
-            const dataUrl = await fromTilesDataToImage(image, "normal");
+            const dataUrl = await fromTilesDataToImage(image, imageColorMode);
             setDataUrl(dataUrl);
           }}>
           Generate
         </button>
       </div>
       <div /*className="flex flex-col gap-2"*/ style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-        <img src={dataUrl} />
-        <MozaicCanvas
+        <img src={dataUrl} className="hidden" />
+        {twoDimention ? <MozaicCanvas
           backgroundColor={backgroundColor}
-          imageColorMode={imageColorMode}
           tileSize={tileSize}
           padding={padding}
           tilesData={tilesData}
           width={width}
           height={height}
-        />
-        <div style={{ height: 400 }}>
+        />: 
+        <div className="w-full h-1/2">
           {dataUrl !== "" && <ThreeJsRenderer
               widthMozaic={width}
               heightMozaic={height}
@@ -125,7 +131,7 @@ function App() {
             />
           }
         </div>
-        <canvas id="palette" width={512} height={512} />
+          }
       </div>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
