@@ -4,7 +4,7 @@ import { useLoader } from '@react-three/fiber';
 import { Box } from '@react-three/drei';
 import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color } from 'three';
 import Tile from "./Tile";
-import { useSpring, useSpringRef, easings} from '@react-spring/web';
+import { useSpring, useSpringRef, easings, useTrail} from '@react-spring/web';
 import { rgbToHex } from "../../utils";
 
 interface MozaicInstanceMeshProps {
@@ -14,11 +14,13 @@ interface MozaicInstanceMeshProps {
   padding: number
   backgroundColor: string;
   tilesData: TileData[];
+  visible: boolean;
 }
 
 const SCALE = 100;
-const TRANSITION_DURATION = 2000; //ms
-const DELAY_DURATION = 5000; //ms
+
+const TRANSITION_DURATION = 90; //ms
+const DELAY_DURATION = 1000; //ms
 
 
 function MozaicInstanceMesh({
@@ -27,7 +29,9 @@ function MozaicInstanceMesh({
   tileSize,
   padding,
   backgroundColor,
-  tilesData}: MozaicInstanceMeshProps)
+  visible,
+  tilesData
+  }: MozaicInstanceMeshProps)
 {
     const [displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
       '/plastic_0021/reduced/height_1k.png',
@@ -49,7 +53,7 @@ function MozaicInstanceMesh({
     },[]);
 
   const springApi = useSpringRef();
-    useSpring({
+    useTrail(tilesData.length, (index) => ({
         ref: springApi,
         from: { ratio: 0 },
         to: { ratio: 1 },
@@ -60,57 +64,70 @@ function MozaicInstanceMesh({
         },
         reset: true,
         onChange: ({value: {ratio}}) => {
-          renderFramePosition(ratio)
+          if(!meshRef.current) {
+            return;
+          }
+          renderTileSizePosition(index, ratio)
         }
-      },
+      }) 
     );
 
   useEffect(() => {
-    init();
-    springApi.stop();
-    springApi.start();
-  }, [tilesData,  meshRef.current]);
+    if(visible) {
+      if(meshRef.current) {
+        init();
+        springApi.stop();
+        springApi.start();
+        
+      }
+    } else {
+      meshRef.current.dispose();
+    }
+  }, [tilesData, meshRef.current, visible]);
 
 
   function init() {
     if(!meshRef.current) {
         console.log("not loaded")
+        return;
     }
     tilesData.map(({x, y, color}, index) => {
       const { red, green, blue } = color;
       const object = new Object3D();
       const colorThree = new Color(rgbToHex(red, green, blue));
       //finale position -> object.position.set(x, -y, 0.1);
-      object.position.set(x, -y, -1000);
+      object.position.set(x, -y, 100);
       object.updateMatrix();
       meshRef.current?.setColorAt(index, colorThree);
       meshRef.current?.setMatrixAt(index, object.matrix);
     })
 
-    meshRef.current!.instanceMatrix.needsUpdate = true;
+    if(meshRef.current && meshRef.current.instanceMatrix) {
+      meshRef.current.instanceMatrix.needsUpdate = true;
+    }
   }
 
 
-  function renderFramePosition(ratio: number) {
+  function renderTileSizePosition(index: number, ratio: number) {
     if(!meshRef.current) {
         console.log("not loaded")
+        return;
     }
-    tilesData.map(({x, y, color}, index) => {
-      const { red, green, blue } = color;
-      const object = new Object3D();
-      const colorThree = new Color(rgbToHex(red, green, blue));
-      object.position.set(x * ratio, -y * ratio, 0.1);
-      object.updateMatrix();
-      meshRef.current?.setColorAt(index, colorThree);
-      meshRef.current?.setMatrixAt(index, object.matrix);
-    })
-
-    meshRef.current!.instanceMatrix.needsUpdate = true;
+    const { x, y } = tilesData[index];
+    const object = new Object3D();
+    object.position.set(x, -y,  0.1 + (1.0 - ratio) * 100);
+    object.updateMatrix();
+    meshRef.current?.setMatrixAt(index, object.matrix);
+    
+    if(meshRef.current && meshRef.current.instanceMatrix) {
+      meshRef.current.instanceMatrix.needsUpdate = true;
+    }
   }
 
 
   return (
     <group
+      visible={visible}
       scale={1/SCALE}
       position={[-width/2/SCALE,height/2/SCALE,0]}
     >

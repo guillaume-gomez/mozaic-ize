@@ -12,6 +12,7 @@ interface MozaicManagerProps {
   base64Texture: string;
   tileSize: number;
   padding: number;
+  visible: boolean;
 }
 
 const geometry = new BoxGeometry(1, 1, 0.2, 1, 1, 1);
@@ -25,7 +26,8 @@ function MozaicManager({
   heightMozaic,
   base64Texture,
   tileSize,
-  padding
+  padding,
+  visible
   }: MozaicManagerProps)
 {
     const [texture, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
@@ -55,6 +57,7 @@ function MozaicManager({
       position={[0,0,0]}
       geometry={geometry}
       castShadow
+      visible={visible}
     >
       <meshStandardMaterial attach="material-0" color="brown" emissive="#000000" roughness={0} metalness={0} />
       <meshStandardMaterial attach="material-1" color="red" emissive="#000000" roughness={0} metalness={0} />
