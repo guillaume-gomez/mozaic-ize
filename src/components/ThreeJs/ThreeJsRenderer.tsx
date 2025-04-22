@@ -1,5 +1,6 @@
 import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
+import { Box3 } from "three";
 import { Canvas} from '@react-three/fiber';
 import Toggle from "../Toggle";
 import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats, Gltf, Text } from '@react-three/drei';
@@ -22,6 +23,7 @@ interface ThreeJsRendererProps {
 }
 
 const SCALE = 100;
+const DEPTH_MAIN_BUILDING = 19.5
 
 function ThreejsRenderer({
   widthMozaic,
@@ -43,7 +45,7 @@ function ThreejsRenderer({
   const cameraRef = useRef<CameraControls>(null);
 
   useEffect(() => {
-    recenter();
+   recenter();
   },[base64Texture, cameraRef, groupRef])
   
   async function recenter() {
@@ -56,6 +58,15 @@ function ThreejsRenderer({
     );
   }
 
+  function computeMozaicScale() {
+    const maxRatio = 1.9 // empirical value
+    const expectedRatio = 17 // same
+
+    const ratio = widthMozaic > heightMozaic ? widthMozaic/widthMozaic : widthMozaic/heightMozaic
+    
+    return ratio*maxRatio*expectedRatio/DEPTH_MAIN_BUILDING;
+  }
+
   return (
     <div className="flex flex-col gap-5 w-full h-full">
       <Toggle
@@ -65,7 +76,7 @@ function ThreejsRenderer({
       />
       <div ref={canvasContainerRef} className="w-full h-full max-h-[92%]">
         <Canvas
-          camera={{ position: [60,0, 60], fov: 75, far: 200 }}
+          camera={{ position: [50,10, 50], fov: 75, far: 200 }}
           dpr={window.devicePixelRatio}
           shadows
           onDoubleClick={() => {
@@ -78,7 +89,7 @@ function ThreejsRenderer({
           <Suspense fallback={<FallBackLoader/>}>
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment="city">
                
-                <group ref={groupRef} position={[-4.5,30,0]} scale={1.5} rotation={[0,Math.PI/2, 0]}>
+                <group ref={groupRef} position={[-4.5,30,0]} scale={computeMozaicScale()} rotation={[0,Math.PI/2, 0]}>
                   <MozaicManager
                       base64Texture={base64Texture}
                       widthMozaic={widthMozaic}
@@ -96,18 +107,21 @@ function ThreejsRenderer({
                       tilesData={tilesData}
                       visible={!optimized}
                    />
-                   <Text 
-                      font={'/font.woff'}
-                      color={0x000000}
-                      fontSize={1.2}
-                      letterSpacing={0}
-                      anchorY="top"
-                      anchorX="center"
-                      lineHeight={0.8}
-                      position={[0, -6, 0.4]}>
-                      {artistName}
-                    </Text>
                  </group>
+                <Text 
+
+                  font={'/font.woff'}
+                  color={0x000000}
+                  fontSize={1.2}
+                  letterSpacing={0}
+                  anchorY="top"
+                  anchorX="center"
+                  lineHeight={0.8}
+                  rotation={[0,Math.PI/2,0]}
+                  position={[-4, 21, 0]}>
+                  {artistName}
+                </Text>
+                <Gltf src={"buildings/skyscraper.glb"} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                
                 <group position={[0, 0.2, 15]} >
                   <Gltf src={"road.glb"} scale={1.25} position={[-25,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
@@ -125,7 +139,6 @@ function ThreejsRenderer({
                   <Gltf src={"road.glb"} scale={1.25} position={[15,0,25]}  rotation={[ 0, 0, 0]}/>
                 </group>
 
-                <Gltf src={"buildings/skyscraper.glb"} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                 <Gltf src={"buildings/skyscraper2.glb"} scale={[8.5,8.5, 16.5]} position={[-22,0.2,0]}  rotation={[ 0, 0, 0]}/>
                 <Gltf src={"buildings/large-building3.glb"} scale={[8.5,8.5, 16.5]} position={[3,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                 <Gltf src={"buildings/large-building3.glb"} scale={8.5} position={[-20,0.2,-22]}  rotation={[ 0, -Math.PI/2, 0]}/>
