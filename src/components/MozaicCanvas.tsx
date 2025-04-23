@@ -1,12 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import {
-    generateColorPalette,
-    drawPalette,
-    extendPalette,
-    fromPaletteToPaletteColor
-} from "../paletteGenerator";
 import Range from "./Range";
-import { TileData } from "../Hooks/useMozaic";
+import { TileData } from "./Hooks/useMozaic";
 import { rgbToHex } from "../utils";
 
 interface MozaicCanvasProps {
@@ -26,7 +20,7 @@ function MozaicCanvas({
   width,
   height
 }: MozaicCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasDocument>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shadowBlur, setShadowBlur] = useState<number>(10);
 
   useEffect(() => {

@@ -5,10 +5,16 @@ const PALETTE_BASE_COLOR = 20;
 type pixel = [number, number, number];
 type colorType = [number, number, number];
 
+interface PaletteColor {
+  red: number;
+  green: number;
+  blue: number;
+}
+
 export interface ExtendedPalette {
-  normal: pixel[20];
-  saturated: pixel[20];
-  hue: pixel[20];
+  original: PaletteColor[];
+  saturated: PaletteColor[];
+  hue: PaletteColor[];
 }
 
 function saturate([hue, saturation, lightness]: colorType, x: number) : colorType {
@@ -50,7 +56,7 @@ export function extendPalette(palette: pixel[], saturationLevel: number = 20, hu
   };
 }
 
-export function fromPaletteToPaletteColor(palette: pixel[]) : Color[] {
+export function fromPaletteToPaletteColor(palette: pixel[]) : PaletteColor[] {
   return palette.map(value => ({red: value[0], green: value[1], blue: value[2] }) );
 }
 

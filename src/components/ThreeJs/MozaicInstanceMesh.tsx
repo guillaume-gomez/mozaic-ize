@@ -1,11 +1,10 @@
 import { useMemo, useEffect, useRef } from "react";
-import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { useLoader } from '@react-three/fiber';
 import { Box } from '@react-three/drei';
-import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color } from 'three';
-import Tile from "./Tile";
-import { useSpring, useSpringRef, easings, useTrail} from '@react-spring/web';
+import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color,TextureLoader } from 'three';
+import { useSpringRef, easings, useTrail} from '@react-spring/web';
 import { rgbToHex } from "../../utils";
+import { TileData } from "../Hooks/useMozaic";
 
 interface MozaicInstanceMeshProps {
   width: number;
@@ -80,7 +79,7 @@ function MozaicInstanceMesh({
         springApi.start();
         
       }
-    } else {
+    } else if(meshRef.current) {
       meshRef.current.dispose();
     }
   }, [tilesData, meshRef.current, visible]);

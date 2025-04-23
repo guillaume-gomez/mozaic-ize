@@ -1,10 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { minBy, findIndex, sample } from "lodash";
 import {
     generateColorPalette,
-    drawPalette,
     extendPalette,
-    fromPaletteToPaletteColor,
     ExtendedPalette
 } from "../../paletteGenerator";
 import { rgbToHex, toDataURL } from "../../utils";
@@ -27,7 +25,7 @@ function useMozaic() {
   const [padding, setPadding] = useState<number>(2);
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
 
-    async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) {
+    async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) : Promise<string> {
       const tilesData = generate(imageOrigin, imageColorMode);
 
       if(tilesData.length === 0) {
@@ -67,6 +65,10 @@ function useMozaic() {
         // create backing canvas
         canvasBuffer.width = width;
         canvasBuffer.height = height;
+        
+        if(!context) {
+          throw new Error("Cannot find the context");
+        }
         // restore main canvas
         context.drawImage(imageOrigin, 0,0);
 
@@ -98,7 +100,7 @@ function useMozaic() {
       height: number,
       tileSize: number,
       padding: number,
-      extendedPalette: ExtendedPalette[],
+      extendedPalette: ExtendedPalette,
       imageColorMode: string) : TileData[] {
       const tilesData: TileData[] = [];
 
@@ -178,9 +180,9 @@ function useMozaic() {
           interpolateArea(context, tileSize, x, y),
           extendedPalette.original
         );
-      const colorIndex = findIndex(extendedPalette.original, foundColor);
+      const colorIndex : number = findIndex(extendedPalette.original, foundColor);
       const randomTypeOfPalette = sample(["original", "original", "original", "hue", "saturated"]);
-      return extendedPalette[randomTypeOfPalette][colorIndex];
+      return extendedPalette[randomTypeOfPalette as keyof ExtendedPalette][colorIndex];
     }
 
     function colorDistance(color1: Color, color2: Color) : number {

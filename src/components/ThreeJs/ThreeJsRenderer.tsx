@@ -1,9 +1,9 @@
 import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
-import { Box3 } from "three";
+import { Object3D, Group } from "three";
 import { Canvas} from '@react-three/fiber';
 import Toggle from "../Toggle";
-import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Bounds, Stats, Gltf, Text } from '@react-three/drei';
+import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
 import GrassTerrain from "./GrassTerrain";
@@ -22,7 +22,6 @@ interface ThreeJsRendererProps {
   artistName: string;
 }
 
-const SCALE = 100;
 const DEPTH_MAIN_BUILDING = 19.5
 
 function ThreejsRenderer({
@@ -38,10 +37,9 @@ function ThreejsRenderer({
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const {
     toggleFullscreen,
-    isFullscreenEnabled
   } = useFullscreen({ target: canvasContainerRef });
   const [optimized, setOptimized] = useState<boolean>(true);
-  const groupRef = useRef<Group>(null);
+  const groupRef = useRef<Group|null>(null);
   const cameraRef = useRef<CameraControls>(null);
 
   useEffect(() => {
@@ -53,7 +51,7 @@ function ThreejsRenderer({
       return;
     }
     await cameraRef.current.setPosition(50, 10, 50, true);
-    await cameraRef.current.fitToBox(groupRef.current, true,
+    await cameraRef.current.fitToBox(groupRef.current as Object3D, true,
       { paddingLeft: 2, paddingRight: 2, paddingBottom: 2, paddingTop: 2 }
     );
   }
@@ -95,7 +93,6 @@ function ThreejsRenderer({
                       widthMozaic={widthMozaic}
                       heightMozaic={heightMozaic}
                       tileSize={tileSize}
-                      padding={padding}
                       visible={optimized}
                    /> 
                    <MozaicInstanceMesh
@@ -175,7 +172,9 @@ function ThreejsRenderer({
                 
 
                 <GrassTerrain />
-               {/*<Grid args={[60, 60]} position={[0,0,0]} cellColor='white' />*/}
+                { import.meta.env.MODE === "development" &&
+                  <Grid args={[60, 60]} position={[0,0,0]} cellColor='white' />
+                }
             </Stage>
           </Suspense>
           <GizmoHelper alignment="bottom-right" margin={[100, 100]}>

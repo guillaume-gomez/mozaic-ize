@@ -1,17 +1,11 @@
-import { useMemo, useEffect, useRef } from "react";
-import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { useLoader } from '@react-three/fiber';
-import { Box } from '@react-three/drei';
-import { Object3D, InstancedMesh, BoxGeometry, MeshStandardMaterial, Color, Vector2, RepeatWrapping } from 'three';
-import Tile from "./Tile";
-import { rgbToHex } from "../../utils";
+import { BoxGeometry, RepeatWrapping, TextureLoader } from 'three';
 
 interface MozaicManagerProps {
   widthMozaic: number;
   heightMozaic: number;
   base64Texture: string;
   tileSize: number;
-  padding: number;
   visible: boolean;
 }
 
@@ -26,7 +20,6 @@ function MozaicManager({
   heightMozaic,
   base64Texture,
   tileSize,
-  padding,
   visible
   }: MozaicManagerProps)
 {

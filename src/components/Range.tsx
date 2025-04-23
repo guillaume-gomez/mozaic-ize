@@ -1,10 +1,9 @@
-import React from 'react';
 
 interface RangeProps {
   label: string;
   value: number;
-  min: value;
-  max:value
+  min: number;
+  max:number
   step?: number
   onChange: (newValue: number) => void;
 }
@@ -12,7 +11,8 @@ interface RangeProps {
 function Range({label, onChange, value, min, max, step = 1} : RangeProps) {
   
   return (
-    <div className="flex flex-col gap-3">
+    <div className="fieldset form-control flex flex-col gap-3">
+      <legend className="fieldset-legend badge badge-accent">{value}</legend>
       <label>
         {label}
         <input
@@ -20,10 +20,10 @@ function Range({label, onChange, value, min, max, step = 1} : RangeProps) {
           min={min}
           max={max}
           type="range"
+          className="range range-primary"
           onChange={(e) => { onChange(parseInt(e.target.value)) }}
         />
       </label>
-      <span>{value}</span>
     </div>
   );
 }

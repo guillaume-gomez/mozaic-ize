@@ -1,5 +1,6 @@
 {
   "name": "mozaic-ize",
+  "homepage": "https://guillaume-gomez.github.io/mozaic-ize/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@react-spring/web": "^9.7.5",
@@ -16,9 +19,11 @@
     "@react-three/postprocessing": "^2.16.3",
     "@tailwindcss/vite": "^4.0.8",
     "@types/color-convert": "^2.0.4",
+    "@types/lodash": "^4.17.16",
     "@types/three": "^0.171.0",
     "color-convert": "^2.0.1",
     "colorthief": "^2.6.0",
+    "gh-pages": "^6.3.0",
     "lodash": "^4.17.21",
     "postprocessing": "^6.36.4",
     "react": "^18.3.1",

@@ -15,6 +15,7 @@ function Select({label, value, options, onChange } : SelectProps) {
 
   return (
     <div className="form-control">
+      <label>{label}</label>
       <select
         className="select select-primary"
         onChange={(e) =>onChange(e.target.value) }
