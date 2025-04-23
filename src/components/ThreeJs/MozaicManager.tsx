@@ -59,11 +59,11 @@ function MozaicManager({
       castShadow
       visible={visible}
     >
-      <meshStandardMaterial attach="material-0" color="brown" emissive="#000000" roughness={0} metalness={0} />
-      <meshStandardMaterial attach="material-1" color="red" emissive="#000000" roughness={0} metalness={0} />
-      <meshStandardMaterial attach="material-2" color="green" emissive="#000000" roughness={0} metalness={0} />
-      <meshStandardMaterial attach="material-3" color="purple" emissive="#000000" roughness={0} metalness={0} />
-      <meshStandardMaterial attach="material-5" color="orange" />
+      <meshStandardMaterial attach="material-0" color="black" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-1" color="black" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-2" color="black" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-3" color="black" emissive="#000000" roughness={0} metalness={0} />
+      <meshStandardMaterial attach="material-5" color="black" />
       <meshStandardMaterial
 
           attach="material-4"
