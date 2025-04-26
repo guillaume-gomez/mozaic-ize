@@ -60,7 +60,7 @@ function MozaicManager({
       <meshStandardMaterial
 
           attach="material-4"
-          color="#AAAAAA"
+          color="#FFFFFF"
           map={texture}
           // debug map={normalMap}
           normalMap={normalMap}
