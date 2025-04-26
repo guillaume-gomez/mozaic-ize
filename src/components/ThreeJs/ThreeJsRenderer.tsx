@@ -3,12 +3,21 @@ import { useFullscreen } from "rooks";
 import { Object3D, Group } from "three";
 import { Canvas} from '@react-three/fiber';
 import Toggle from "../Toggle";
+import { 
+  animated, 
+  useTransition,
+  useSpring,
+  useChain,
+  useSpringRef
+ } from '@react-spring/three';
 import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
 import GrassTerrain from "./GrassTerrain";
 import MozaicInstanceMesh from "./MozaicInstanceMesh";
 import { TileData } from "../Hooks/useMozaic";
+
+const AnimatedGltf = animated(Gltf);
 
 
 interface ThreeJsRendererProps {
@@ -41,9 +50,22 @@ function ThreejsRenderer({
   const [optimized, setOptimized] = useState<boolean>(true);
   const groupRef = useRef<Group|null>(null);
   const cameraRef = useRef<CameraControls>(null);
+  
+   const props = useSpring({
+    from: { z: -40, },
+    to: [
+      { z: 40},
+    ],
+    config: {
+      duration: 5000,
+      delay: 3000,
+    },
+    loop: true
+  });
+
 
   useEffect(() => {
-   recenter();
+   //recenter();
   },[base64Texture, cameraRef, groupRef])
   
   async function recenter() {
@@ -72,7 +94,7 @@ function ThreejsRenderer({
         value={optimized}
         toggle={() => setOptimized(!optimized)}
       />
-      <div ref={canvasContainerRef} className="w-full h-full max-h-[92%]">
+      <div ref={canvasContainerRef} className="w-full h-full">
         <Canvas
           camera={{ position: [50,10, 50], fov: 75, far: 200 }}
           dpr={window.devicePixelRatio}
@@ -107,7 +129,7 @@ function ThreejsRenderer({
                  </group>
                 <Text 
 
-                  font={'/font.woff'}
+                  font={'font.woff'}
                   color={0x000000}
                   fontSize={1.2}
                   letterSpacing={0}
@@ -163,12 +185,28 @@ function ThreejsRenderer({
                 <Gltf src={"fence.glb"} scale={3} position={[20, 0, -23]}  rotation={[ 0, Math.PI/2, 0]}/>
                 <Gltf src={"fence.glb"} scale={3} position={[20, 0, -24]}  rotation={[ 0, Math.PI/2, 0]}/>
 
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 25]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 1]}  rotation={[ 0, -Math.PI/2, 0]}/>
+                <Gltf src={"trees/tree2.glb"} scale={1.25}  position={[27, 0, 5]}  rotation={[ 0, -Math.PI/6, 0]}/>
+                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[23, 0, 10]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={"trees/tree2.glb"} scale={1}  position={[28, 0, 11]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={"trees/tree3.glb"} scale={0.85}  position={[23, 0, 15]}  rotation={[ 0, Math.PI, 0]}/>
+                <Gltf src={"trees/tree2.glb"} scale={1}  position={[27, 0, 15]}  rotation={[ 0, 0, 0]}/>
                 <Gltf src={"trees/tree3.glb"} scale={1}  position={[24, 0, 20]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1}  position={[24, 0, 15]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 10]}  rotation={[ 0, -Math.PI/4, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 5]}  rotation={[ 0, -Math.PI/4, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 0]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={"trees/tree.glb"} scale={1}  position={[28, 0, 22]}  rotation={[ 0, -Math.PI/3, 0]}/>
+                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 25]}  rotation={[ 0, -Math.PI/3, 0]}/>
+                
+                <Gltf src={"wheel.glb"} scale={5}  position={[24, 6, -9]}  rotation={[ 0, -Math.PI/2, 0]}/>
+
+
+                <AnimatedGltf
+                  src={"cars/taxi.glb"}
+                  scale={0.5}
+                  position-x={13}
+                  position-y={0}
+                  position-z={props.z}
+                  rotation={[ 0, 0, 0]}
+
+                  />
                 
 
                 <GrassTerrain />
