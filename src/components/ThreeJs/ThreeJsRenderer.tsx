@@ -5,11 +5,8 @@ import { Canvas} from '@react-three/fiber';
 import Toggle from "../Toggle";
 import { 
   animated, 
-  useTransition,
   useSpring,
-  useChain,
-  useSpringRef
- } from '@react-spring/three';
+} from '@react-spring/three';
 import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
