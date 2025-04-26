@@ -84,7 +84,7 @@ function ThreejsRenderer({
     if(!cameraRef.current || !cameraRef.current) {
       return;
     }
-    await cameraRef.current.setPosition(50, 10, 50, true);
+    await cameraRef.current.setPosition(50, 10, 20, true);
     await cameraRef.current.fitToBox(groupRef.current as Object3D, true,
       { paddingLeft: 2, paddingRight: 2, paddingBottom: 2, paddingTop: 2 }
     );
@@ -108,7 +108,7 @@ function ThreejsRenderer({
       />
       <div ref={canvasContainerRef} className="w-full h-full">
         <Canvas
-          camera={{ position: [50,10, 50], fov: 75, far: 200 }}
+          camera={{ position: [50,10, 20], fov: 75, far: 200 }}
           dpr={window.devicePixelRatio}
           shadows
           onDoubleClick={() => {
@@ -139,8 +139,7 @@ function ThreejsRenderer({
                       visible={!optimized}
                    />
                  </group>
-                <Text 
-
+                <Text
                   font={'font.woff'}
                   color={0x000000}
                   fontSize={1.2}
