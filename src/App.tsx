@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -12,10 +10,9 @@ import useMozaic from "./components/Hooks/useMozaic";
 import Card from "./components/Card";
 
 function App() {
-  const [count, setCount] = useState<number>(0);
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [image, setImage] = useState<HTMLImageElement>();
-  //const [twoDimention, setTwoDimention] =  useState<boolean>(false);
+  const [twoDimension, setTwoDimension] =  useState<boolean>(false);
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [width, setWidth] =  useState<number>(1024);
   const [height, setHeight] =  useState<number>(1024);
@@ -23,7 +20,7 @@ function App() {
   const [dataUrl, setDataUrl] = useState<string>("");
   const {
     tilesData,
-    fromTilesDataToImage,
+    generateImage,
     padding,
     tileSize,
     backgroundColor,
@@ -49,126 +46,131 @@ function App() {
     if(originalImage) {
       uploadImage(originalImage);
     }
-  }, [tileSize])
+  }, [tileSize]);
+
+  async function generate() {
+    if(!image) {
+      console.error("Image is not loaded")
+      return;
+    }
+    const dataUrl = await generateImage(image, imageColorMode);
+    if(!dataUrl) {
+      console.error("Cannot generate image");
+      return;
+    }
+    setDataUrl(dataUrl);
+  }
 
   return (
-    <div className="container m-auto flex flex-col gap-5 lg:p-2 p-4">
-      <div>
-        <h1 className="text-3xl font-bold underline">
-          Hello world!
-        </h1>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+    <div className="container m-auto flex-col gap-5 lg:p-2 p-4">
       <h1>Mosaic-ize</h1>
-      <Card
-        label={"Settings"}
-      >
-        <ColorPicker
-          label={"BackgroundColor"}
-          onChange={(color) => setBackgroundColor(color)}
-          value={backgroundColor}
-        />
-        <Range
-          min={16}
-          max={128}
-          step={8}
-          label={"Mozaic Tile"}
-          value={tileSize}
-          onChange={setTileSize}
-        />
-        <Range
-          min={0}
-          max={tileSize - 20}
-          step={2}
-          label={"Padding"}
-          value={padding}
-          onChange={setPadding}
-        />
-        <InputFileWithPreview onChange={uploadImage} value={image} />
-        <Select
-          label="Mode of generation"
-          value={imageColorMode}
-          onChange={(imageColorMode) => setImageColorMode(imageColorMode)}
-          options={[
-            {label: "Normal", value: "normal"},
-            {label: "Random", value: "random"},
-          ]}
-        />
-        <input
-          type="text"
-          className="input input-primary" 
-          max={32}
-          value={artistName}
-          onChange={(e) => {
-              if(e.target.value.length < 32) {
-                setArtistName(e.target.value)
+      <div className="h-full grid grid-flow-col grid grid-cols-3 gap-4">
+
+        <Card
+          label={"Settings"}
+        >
+          <ColorPicker
+            label={"BackgroundColor"}
+            onChange={(color) => setBackgroundColor(color)}
+            value={backgroundColor}
+          />
+          <Range
+            min={16}
+            max={128}
+            step={8}
+            label={"Mozaic Tile"}
+            value={tileSize}
+            onChange={setTileSize}
+          />
+          <Range
+            min={0}
+            max={tileSize - 20}
+            step={2}
+            label={"Padding"}
+            value={padding}
+            onChange={setPadding}
+          />
+          <InputFileWithPreview onChange={uploadImage} value={image} />
+          <Select
+            label="Mode of generation"
+            value={imageColorMode}
+            onChange={(imageColorMode) => setImageColorMode(imageColorMode)}
+            options={[
+              {label: "Normal", value: "normal"},
+              {label: "Random", value: "random"},
+            ]}
+          />
+          <input
+            type="text"
+            className="input input-primary" 
+            max={32}
+            value={artistName}
+            onChange={(e) => {
+                if(e.target.value.length < 32) {
+                  setArtistName(e.target.value)
+                }
               }
             }
-          }
-        />
-        <button
-          className="btn btn-primary"
-          onClick={async () => {
-            //generate(image, "normal");
-            if(!image) {
-              console.error("Image is not loaded")
-              return;
+          />
+          <button
+            className="btn btn-primary"
+            onClick={generate}>
+            Generate
+          </button>
+        </Card>
+        <div className="col-span-3 col-start-2">
+          <img src={dataUrl} className="hidden" />
+          <Card 
+            label={
+              <div role="tablist"
+                className="tabs tabs-box"
+              >
+                <a 
+                  role="tab"
+                  className={`tab ${!twoDimension ? "tab-active" : ""}`}
+                  onClick={() => setTwoDimension(false)}
+                >
+                  3D
+                </a>
+                <a 
+                  role="tab"
+                  className={`tab ${twoDimension ? "tab-active" : ""}`}
+                  onClick={() => setTwoDimension(true)}
+                >
+                  2D
+                </a>
+              </div>
             }
-            const dataUrl = await fromTilesDataToImage(image, imageColorMode);
-            console.log(dataUrl)
-            if(!dataUrl) {
-              console.error("Cannot generate image");
-              return;
-            }
-            setDataUrl(dataUrl);
-          }}>
-          Generate
-        </button>
-      </Card>
-      <img src={dataUrl} className="hidden" />
-      <Card 
-        label="3d"
-      >
-        {dataUrl !== "" && <ThreeJsRenderer
-              widthMozaic={width}
-              heightMozaic={height}
-              base64Texture={dataUrl}
-              tilesData={tilesData}
-              tileSize={tileSize}
-              padding={padding}
-              backgroundColor={backgroundColor}
-              artistName={artistName}
-            />
-          }
-      </Card>
-      <Card
-        label="2D"
-      >
-        <MozaicCanvas
-          backgroundColor={backgroundColor}
-          tileSize={tileSize}
-          padding={padding}
-          tilesData={tilesData}
-          width={width}
-          height={height}
-        />
-      </Card>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+          >
+            
+            {!twoDimension &&  dataUrl !== "" &&
+                <ThreeJsRenderer
+                  widthMozaic={width}
+                  heightMozaic={height}
+                  base64Texture={dataUrl}
+                  tilesData={tilesData}
+                  tileSize={tileSize}
+                  padding={padding}
+                  backgroundColor={backgroundColor}
+                  artistName={artistName}
+                />
+              }
+              {
+                twoDimension && 
+                <MozaicCanvas
+                  backgroundColor={backgroundColor}
+                  tileSize={tileSize}
+                  padding={padding}
+                  tilesData={tilesData}
+                  width={width}
+                  height={height}
+                />
+              }
+          </Card>
+        </div>
+
+
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   )
 }

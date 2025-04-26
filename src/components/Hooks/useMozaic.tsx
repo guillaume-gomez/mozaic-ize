@@ -25,7 +25,7 @@ function useMozaic() {
   const [padding, setPadding] = useState<number>(2);
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
 
-    async function fromTilesDataToImage(imageOrigin: HTMLImageElement, imageColorMode: string) : Promise<string> {
+    async function generateImage(imageOrigin: HTMLImageElement, imageColorMode: string) : Promise<string> {
       const tilesData = generate(imageOrigin, imageColorMode);
 
       if(tilesData.length === 0) {
@@ -194,8 +194,8 @@ function useMozaic() {
 
   return { 
     generate,
+    generateImage,
     tilesData,
-    fromTilesDataToImage,
     padding,
     tileSize,
     backgroundColor,
