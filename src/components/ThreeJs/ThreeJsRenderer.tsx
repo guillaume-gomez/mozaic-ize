@@ -51,21 +51,36 @@ function ThreejsRenderer({
   const groupRef = useRef<Group|null>(null);
   const cameraRef = useRef<CameraControls>(null);
   
-   const props = useSpring({
-    from: { z: -40, },
+  const propsTaxi = useSpring({
+    from: { z: -30, visible: false },
     to: [
-      { z: 40},
+      { z: -30, visible: true },
+      { z: 30, visible: true},
+      { z: 60, visible: false},
     ],
     config: {
-      duration: 5000,
-      delay: 3000,
+      duration: 4500,
+    },
+    loop: true
+  });
+
+  const propsTruck = useSpring({
+    from: { z: 60, visible: false },
+    to: [
+      { z: 30, visible: false},
+      { z: 10, visible: true},
+      { z: -30, visible: true},
+      { z: -31, visible: false},
+    ],
+    config: {
+      duration: 4000,
     },
     loop: true
   });
 
 
   useEffect(() => {
-   //recenter();
+   recenter();
   },[base64Texture, cameraRef, groupRef])
   
   async function recenter() {
@@ -197,17 +212,31 @@ function ThreejsRenderer({
                 
                 <Gltf src={"wheel.glb"} scale={5}  position={[24, 6, -9]}  rotation={[ 0, -Math.PI/2, 0]}/>
 
+              <animated.group
+                  visible={propsTaxi.visible}
+                  >
+                  <AnimatedGltf
+                    src={"cars/taxi.glb"}
+                    scale={0.5}
+                    position-x={13}
+                    position-y={0}
+                    position-z={propsTaxi.z}
+                    rotation={[ 0, 0, 0]}
+                    />
+                 </animated.group>
 
-                <AnimatedGltf
-                  src={"cars/taxi.glb"}
-                  scale={0.5}
-                  position-x={13}
-                  position-y={0}
-                  position-z={props.z}
-                  rotation={[ 0, 0, 0]}
-
-                  />
-                
+                <animated.group
+                  visible={propsTruck.visible}
+                  >
+                  <AnimatedGltf
+                    src={"cars/truck.glb"}
+                    scale={0.015}
+                    position-x={17}
+                    position-y={0}
+                    position-z={propsTruck.z}
+                    rotation={[ 0, -Math.PI/2, 0]}
+                    />
+                </animated.group>
 
                 <GrassTerrain />
                 { import.meta.env.MODE === "development" &&
