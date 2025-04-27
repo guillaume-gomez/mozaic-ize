@@ -18,6 +18,7 @@ function App() {
   const [height, setHeight] =  useState<number>(1024);
   const [artistName, setArtistName]= useState<string>("Made by Guillaume G");
   const [dataUrl, setDataUrl] = useState<string>("");
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const {
     tilesData,
     generateImage,
@@ -40,6 +41,7 @@ function App() {
     setHeight(expectedHeight);
 
     setOriginalImage(newImage);
+    setIsDirty(true);
   }
 
   useEffect(() => {
@@ -59,6 +61,7 @@ function App() {
       return;
     }
     setDataUrl(dataUrl);
+    setIsDirty(false);
   }
 
   return (
@@ -71,7 +74,10 @@ function App() {
         >
           <ColorPicker
             label={"BackgroundColor"}
-            onChange={(color) => setBackgroundColor(color)}
+            onChange={(color) => {
+              setBackgroundColor(color);
+              setIsDirty(true);
+            }}
             value={backgroundColor}
           />
           <Range
@@ -80,7 +86,10 @@ function App() {
             step={8}
             label={"Mozaic Tile"}
             value={tileSize}
-            onChange={setTileSize}
+            onChange={(value) => {
+              setTileSize(value);
+              setIsDirty(true);
+            }}
           />
           <Range
             min={0}
@@ -88,33 +97,44 @@ function App() {
             step={2}
             label={"Padding"}
             value={padding}
-            onChange={setPadding}
+            onChange={(value) => {
+              setPadding(value)
+              setIsDirty(true);
+            }}
           />
           <InputFileWithPreview onChange={uploadImage} value={image} />
           <Select
             label="Mode of generation"
             value={imageColorMode}
-            onChange={(imageColorMode) => setImageColorMode(imageColorMode)}
+            onChange={(imageColorMode) => {
+              setImageColorMode(imageColorMode)
+              setIsDirty(true);
+            }}
             options={[
               {label: "Normal", value: "normal"},
               {label: "Random", value: "random"},
             ]}
           />
-          <input
-            type="text"
-            className="input input-primary" 
-            max={32}
-            value={artistName}
-            onChange={(e) => {
-                if(e.target.value.length < 32) {
-                  setArtistName(e.target.value)
+          <div className="form-control">
+            <label>Artist name</label>
+            <input
+              type="text"
+              className="input input-primary w-full" 
+              max={32}
+              value={artistName}
+              onChange={(e) => {
+                  if(e.target.value.length < 32) {
+                    setArtistName(e.target.value)
+                  }
                 }
               }
-            }
-          />
+            />
+          </div>
           <button
             className="btn btn-primary"
-            onClick={generate}>
+            onClick={generate}
+            disabled={!isDirty}
+          >
             Generate
           </button>
         </Card>

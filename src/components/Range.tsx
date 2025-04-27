@@ -11,19 +11,19 @@ interface RangeProps {
 function Range({label, onChange, value, min, max, step = 1} : RangeProps) {
   
   return (
-    <div className="fieldset form-control flex flex-col gap-3">
-      <legend className="fieldset-legend badge badge-accent">{value}</legend>
-      <label>
-        {label}
+    <div className="form-control">
+      <label>{label}</label>
+      <div className="flex flex-row gap-2">
         <input
           step={step}
           min={min}
           max={max}
           type="range"
-          className="range range-primary"
+          className="range range-primary w-full"
           onChange={(e) => { onChange(parseInt(e.target.value)) }}
         />
-      </label>
+        <legend className="fieldset-legend badge badge-accent">{value}</legend>
+      </div>
     </div>
   );
 }
