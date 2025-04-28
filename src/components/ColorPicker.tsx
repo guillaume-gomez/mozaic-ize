@@ -16,11 +16,11 @@ function ColorPicker({ value, onChange, label }: ColorPickerProps) {
   }
 	
 	return (
-  	<div className="form-control flex flex-col ">
+  	<div className="form-control flex flex-col">
       <label>{label}</label>
       <input
         type="color"
-        className="w-15 h-10 border-0"
+        className="w-15 h-10 border-0 m-0"
         value={value}
         onChange={(e) => throttleOnChangeInputColor(e.target.value)}
       />

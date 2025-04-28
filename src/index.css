@@ -1,2 +1,51 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@font-face {
+  font-family: "StreeCorner";
+  src: local("StreeCorner"),
+    url("/fonts/street-corner-semiBold.ttf") format("truetype");
+}
+
+
+@layer base {
+  html {
+    font-family: StreeCorner, Arial;
+  }
+}
+
+
+@plugin "daisyui/theme" {
+  name: "mozaic";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(14% 0.004 49.25);
+  --color-base-200: oklch(21% 0.006 56.043);
+  --color-base-300: oklch(26% 0.007 34.298);
+  --color-base-content: oklch(97% 0.001 106.424);
+  --color-primary: oklch(48% 0.243 264.376);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-secondary: oklch(72% 0.219 149.579);
+  --color-secondary-content: oklch(0% 0 0);
+  --color-accent: oklch(58% 0.253 17.585);
+  --color-accent-content: oklch(98% 0.001 106.423);
+  --color-neutral: oklch(21% 0.006 56.043);
+  --color-neutral-content: oklch(98% 0.001 106.423);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(76% 0.233 130.85);
+  --color-success-content: oklch(98% 0.031 120.757);
+  --color-warning: oklch(76% 0.188 70.08);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.5rem;
+  --radius-field: 1rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 0.5px;
+  --depth: 0;
+  --noise: 1;
+}

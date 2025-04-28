@@ -22,7 +22,7 @@ function Range({label, onChange, value, min, max, step = 1} : RangeProps) {
           className="range range-primary w-full"
           onChange={(e) => { onChange(parseInt(e.target.value)) }}
         />
-        <legend className="fieldset-legend badge badge-accent">{value}</legend>
+        <legend className="fieldset-legend badge badge-secondary">{value}</legend>
       </div>
     </div>
   );

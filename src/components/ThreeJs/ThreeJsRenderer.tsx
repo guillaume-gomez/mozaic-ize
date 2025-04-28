@@ -79,6 +79,7 @@ function ThreejsRenderer({
   useEffect(() => {
    recenter();
   },[base64Texture, cameraRef, groupRef])
+
   
   async function recenter() {
     if(!cameraRef.current || !cameraRef.current) {
@@ -115,42 +116,48 @@ function ThreejsRenderer({
             toggleFullscreen();
           }}
         >
-          <color attach="background" args={['#A1E3F9']} />
+          
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.0} />
           <Suspense fallback={<FallBackLoader/>}>
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment="city">
                
                 <group ref={groupRef} position={[-4.5,30,0]} scale={computeMozaicScale()} rotation={[0,Math.PI/2, 0]}>
-                  <MozaicManager
-                      base64Texture={base64Texture}
-                      widthMozaic={widthMozaic}
-                      heightMozaic={heightMozaic}
-                      tileSize={tileSize}
-                      visible={optimized}
-                   /> 
-                   <MozaicInstanceMesh
-                      width={widthMozaic}
-                      height={heightMozaic}
-                      tileSize={tileSize}
-                      padding={padding}
-                      backgroundColor={backgroundColor}
-                      tilesData={tilesData}
-                      visible={!optimized}
-                   />
+                  {base64Texture &&
+                      <MozaicManager
+                        base64Texture={base64Texture}
+                        widthMozaic={widthMozaic}
+                        heightMozaic={heightMozaic}
+                        tileSize={tileSize}
+                        visible={optimized}
+                      />
+                   } 
+                   {tilesData.length > 0 &&
+                      <MozaicInstanceMesh
+                        width={widthMozaic}
+                        height={heightMozaic}
+                        tileSize={tileSize}
+                        padding={padding}
+                        backgroundColor={backgroundColor}
+                        tilesData={tilesData}
+                        visible={!optimized}
+                      />
+                    }
                  </group>
-                <Text
-                  font={'font.woff'}
-                  color={0x000000}
-                  fontSize={1.2}
-                  letterSpacing={0}
-                  anchorY="top"
-                  anchorX="center"
-                  lineHeight={0.8}
-                  rotation={[0,Math.PI/2,0]}
-                  position={[-4, 21, 0]}>
-                  {artistName}
-                </Text>
+                {
+                  (base64Texture || tilesData.length > 0) && <Text
+                    font={'fonts/good-bakwan.woff'}
+                    color={0x000000}
+                    fontSize={1.2}
+                    letterSpacing={0}
+                    anchorY="top"
+                    anchorX="center"
+                    lineHeight={0.8}
+                    rotation={[0,Math.PI/2,0]}
+                    position={[-4, 21, 0]}>
+                    {artistName}
+                  </Text>
+                }
                 <Gltf src={"buildings/skyscraper.glb"} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                
                 <group position={[0, 0.2, 15]} >
