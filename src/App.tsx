@@ -74,6 +74,7 @@ function App() {
         goToFinalResultDivRef.current.scrollIntoView({behavior: "smooth", block: 'center' });
       }
     }, 750);
+
   }
 
   // pour le bouton, le faire passer de - sa position initiale à sa position finale
@@ -207,7 +208,6 @@ function App() {
                   height={height}
                 />
               }
-
           </div>
         </div>
       </div>
