@@ -7,7 +7,7 @@ function Header() {
 			</a>
 			<div className="px-8">
 				<a
-          href="https://github.com/guillaume-gomez/rubiks-image"
+          href="https://github.com/guillaume-gomez/mozaic-ize"
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline md:btn-neutral btn-lg rounded-xl"
