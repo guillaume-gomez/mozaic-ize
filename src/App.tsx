@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -8,7 +8,6 @@ import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 import Toggle from "./components/Toggle";
-import Header from "./components/Header";
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
@@ -20,6 +19,7 @@ function App() {
   const [artistName, setArtistName]= useState<string>("Made by Guillaume G");
   const [dataUrl, setDataUrl] = useState<string>("");
   const [isDirty, setIsDirty] = useState<boolean>(false);
+  const goToFinalResultDivRef = useRef<HTMLDivElement>(null)
   // to conditionnaly hide some items
   const [firstRender, setFirstRender] = useState<boolean>(true);
   const {
@@ -67,7 +67,13 @@ function App() {
     setDataUrl(dataUrl);
     setIsDirty(false);
     setFirstRender(false);
-    springApi.start();
+    
+    // scrollIntoView does not work on async function
+    setTimeout(() => {
+      if(goToFinalResultDivRef.current) {
+        goToFinalResultDivRef.current.scrollIntoView({behavior: "smooth", block: 'center' });
+      }
+    }, 750);
   }
 
   // pour le bouton, le faire passer de - sa position initiale à sa position finale
@@ -76,7 +82,6 @@ function App() {
     <div className="bg-base-300">
       <div className="relative container m-auto flex-col h-screen gap-5 lg:p-2 p-4">
         <img src={dataUrl} className="hidden" />
-        <Header />
         <div className="h-full flex md:flex-row flex-col gap-4 flex-grow">
           <div className="lg:basis-4/12 md:basis-5/12 basis-auto content-center">
 
@@ -97,7 +102,7 @@ function App() {
                     <InputFileWithPreview onChange={uploadImage} value={image} />
                   </div>
                   {!firstRender &&
-                  <animated.div style={props}>
+                  <div>
                     <div className="form-control">
                       <label>Sign you artwork (max 32 caracters)</label>
                       <input
@@ -160,7 +165,7 @@ function App() {
                       value={twoDimension}
                       toggle={() => setTwoDimension(!twoDimension)}
                     />
-                  </animated.div>
+                  </div>
                   }
                   { image && 
                     <div className="form-control flex flex-col gap-1">
@@ -178,7 +183,7 @@ function App() {
               </div>
 
           </div>
-          <div className="lg:basis-8/12 md:basis-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
+          <div ref={goToFinalResultDivRef} className="lg:basis-8/12 md:basis-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
              {  !twoDimension &&
                 <ThreeJsRenderer
                   widthMozaic={width}
@@ -202,10 +207,9 @@ function App() {
                   height={height}
                 />
               }
-          </Card>
+
+          </div>
         </div>
-
-
       </div>
     </div>
   )
