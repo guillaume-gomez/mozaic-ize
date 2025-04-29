@@ -2,7 +2,7 @@ import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
 import { Object3D, Group } from "three";
 import { Canvas} from '@react-three/fiber';
-import Toggle from "../Toggle";
+//import Toggle from "../Toggle";
 import { 
   animated, 
   useSpring,
@@ -102,11 +102,11 @@ function ThreejsRenderer({
 
   return (
     <div className="flex flex-col gap-5 w-full h-full">
-      <Toggle
+      {/*<Toggle
         label="Optimized"
         value={optimized}
         toggle={() => setOptimized(!optimized)}
-      />
+      />*/}
       <div ref={canvasContainerRef} className="w-full h-full">
         <Canvas
           camera={{ position: [50,10, 20], fov: 75, far: 200 }}
@@ -132,17 +132,6 @@ function ThreejsRenderer({
                         visible={optimized}
                       />
                    } 
-                   {tilesData.length > 0 &&
-                      <MozaicInstanceMesh
-                        width={widthMozaic}
-                        height={heightMozaic}
-                        tileSize={tileSize}
-                        padding={padding}
-                        backgroundColor={backgroundColor}
-                        tilesData={tilesData}
-                        visible={!optimized}
-                      />
-                    }
                  </group>
                 {
                   (base64Texture || tilesData.length > 0) && <Text
