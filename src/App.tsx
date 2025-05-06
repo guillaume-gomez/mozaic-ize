@@ -8,6 +8,7 @@ import ThreeJsRenderer from "./components/ThreeJs/ThreeJsRenderer";
 import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 import Toggle from "./components/Toggle";
+import { useSpring, animated, useSpringRef, easings } from '@react-spring/web'
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
@@ -52,6 +53,30 @@ function App() {
     }
   }, [tileSize]);
 
+  const apiDiv = useSpringRef()
+  const propsDiv = useSpring({
+    ref: apiDiv,
+    config: {
+      easing: easings.easeInOutCubic,
+      duration: 250,
+    },
+    from: { height: 100 },
+    to: { height: 525 },
+    // chaining the second animation
+    onRest: () => { apiForm.start() }
+  })
+
+  const apiForm = useSpringRef()
+  const propsForm = useSpring({
+    ref: apiForm,
+    config: {
+      easing: easings.easeInOutBack,
+      duration: 500
+    },
+    from: { opacity: 0.2, transformOrigin: "top left", scaleX: 0 },
+    to: { opacity: 1.0, scaleX: 1 },
+  })
+
   async function generate() {
     if(!image) {
       console.error("Image is not loaded")
@@ -66,6 +91,7 @@ function App() {
     setDataUrl(dataUrl);
     setIsDirty(false);
     setFirstRender(false);
+    apiDiv.start();
   }
 
   // pour le bouton, le faire passer de - sa position initiale à sa position finale
@@ -88,13 +114,13 @@ function App() {
                     <span className="px-2 underline decoration-primary">art</span>
                   </h2>
                 </div>
-                <div className="flex flex-col gap-3">
+                <animated.div style={propsDiv} className="flex flex-col gap-3">
                   <div>
                     <label>Upload an image for start</label>
                     <InputFileWithPreview onChange={uploadImage} value={image} />
                   </div>
                   {!firstRender &&
-                  <div>
+                  <animated.div style={propsForm}>
                     <div className="form-control">
                       <label>Sign you artwork (max 32 caracters)</label>
                       <input
@@ -157,7 +183,7 @@ function App() {
                       value={twoDimension}
                       toggle={() => setTwoDimension(!twoDimension)}
                     />
-                  </div>
+                  </animated.div>
                   }
                   { image && 
                     <div className="form-control flex flex-col gap-1">
@@ -171,7 +197,7 @@ function App() {
                       </button>
                     </div>
                   }
-                </div>
+                </animated.div>
               </div>
 
           </div>
