@@ -73,6 +73,7 @@ function App() {
       easing: easings.easeInOutBack,
       duration: 500
     },
+    delay: 100,
     from: { opacity: 0.2, transformOrigin: "top left", scaleX: 0 },
     to: { opacity: 1.0, scaleX: 1 },
   })
