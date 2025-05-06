@@ -1,6 +1,8 @@
 import { useLoader } from '@react-three/fiber';
 import { BoxGeometry, RepeatWrapping, TextureLoader } from 'three';
 
+const { BASE_URL } = import.meta.env;
+
 interface MozaicManagerProps {
   widthMozaic: number;
   heightMozaic: number;
@@ -25,9 +27,9 @@ function MozaicManager({
 {
     const [texture, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
       base64Texture,
-      'plastic_0021/reduced/normal_1k.png',
-      'plastic_0021/reduced/roughness_1k.jpg',
-      'plastic_0021/reduced/ao_1k.jpg',
+      `${BASE_URL}/plastic_0021/reduced/normal_1k.png`,
+      `${BASE_URL}/plastic_0021/reduced/roughness_1k.jpg`,
+      `${BASE_URL}/plastic_0021/reduced/ao_1k.jpg`,
     ]);
 
     normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
