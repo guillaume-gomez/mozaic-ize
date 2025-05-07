@@ -1,18 +1,19 @@
 import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
-import { Object3D, Group } from "three";
-import { Canvas} from '@react-three/fiber';
+import { Group } from "three";
+import { Canvas } from '@react-three/fiber';
 import Toggle from "../Toggle";
 import { 
   animated, 
   useSpring,
 } from '@react-spring/three';
-import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
 import GrassTerrain from "./GrassTerrain";
 import MozaicInstanceMesh from "./MozaicInstanceMesh";
 import { TileData } from "../Hooks/useMozaic";
+import CustomCameraControls, { ExternalActionInterface } from "./CustomCameraControls";
 
 const AnimatedGltf = animated(Gltf);
 
@@ -48,7 +49,7 @@ function ThreejsRenderer({
   } = useFullscreen({ target: canvasContainerRef });
   const [optimized, setOptimized] = useState<boolean>(true);
   const groupRef = useRef<Group|null>(null);
-  const cameraRef = useRef<CameraControls>(null);
+  const cameraControlsRef = useRef<ExternalActionInterface| null>(null);
   
   const propsTaxi = useSpring({
     from: { z: -30, visible: false },
@@ -79,19 +80,12 @@ function ThreejsRenderer({
 
 
   useEffect(() => {
-   recenter();
-  },[base64Texture, cameraRef, groupRef])
-
-  
-  async function recenter() {
-    if(!cameraRef.current || !cameraRef.current) {
-      return;
+    if(cameraControlsRef.current && groupRef.current ) {
+      cameraControlsRef.current.recenter(groupRef.current);
     }
-    await cameraRef.current.setPosition(50, 10, 20, true);
-    await cameraRef.current.fitToBox(groupRef.current as Object3D, true,
-      { paddingLeft: 2, paddingRight: 2, paddingBottom: 2, paddingTop: 2 }
-    );
-  }
+  },[base64Texture, groupRef])
+  
+
 
   function computeMozaicScale() {
     const maxRatio = 1.9 // empirical value
@@ -101,6 +95,8 @@ function ThreejsRenderer({
     
     return ratio*maxRatio*expectedRatio/DEPTH_MAIN_BUILDING;
   }
+
+
 
   return (
     <div className="flex flex-col gap-5 w-full h-full">
@@ -252,14 +248,9 @@ function ThreejsRenderer({
           <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
             <GizmoViewport labelColor="white" axisHeadScale={1} />
           </GizmoHelper>
-          <CameraControls
-            makeDefault
-            maxDistance={80}
-            minPolarAngle={0}
-            maxPolarAngle={Math.PI / 1.9}
-            minAzimuthAngle={0.5}
-            maxAzimuthAngle={1.9}
-            ref={cameraRef}
+          <CustomCameraControls
+            ref={cameraControlsRef}
+            speed={2.5}
           />
         </Canvas>
       </div>
