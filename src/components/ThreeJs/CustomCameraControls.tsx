@@ -62,6 +62,7 @@ const CustomCameraControls = forwardRef<ExternalActionInterface, CustomCameraCon
     }
   }));
 
+
   return (<CameraControls
       makeDefault
       maxDistance={80}
