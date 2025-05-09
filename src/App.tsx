@@ -59,7 +59,7 @@ function App() {
     ref: apiDiv,
     config: {
       easing: easings.easeInOutCubic,
-      duration: 250,
+      duration: 1000,
     },
     from: { height: 100 },
     to: { height: 525 },
