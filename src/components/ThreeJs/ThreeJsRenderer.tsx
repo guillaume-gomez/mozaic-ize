@@ -1,20 +1,23 @@
 import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
-import { Object3D, Group } from "three";
-import { Canvas} from '@react-three/fiber';
+import { Group } from "three";
+import { Canvas } from '@react-three/fiber';
 import Toggle from "../Toggle";
 import { 
   animated, 
   useSpring,
 } from '@react-spring/three';
-import { CameraControls, GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
 import MozaicManager from "./MozaicManager";
 import GrassTerrain from "./GrassTerrain";
 import MozaicInstanceMesh from "./MozaicInstanceMesh";
 import { TileData } from "../Hooks/useMozaic";
+import CustomCameraControls, { ExternalActionInterface } from "./CustomCameraControls";
 
 const AnimatedGltf = animated(Gltf);
+
+const { BASE_URL, MODE } = import.meta.env;
 
 
 interface ThreeJsRendererProps {
@@ -46,7 +49,7 @@ function ThreejsRenderer({
   } = useFullscreen({ target: canvasContainerRef });
   const [optimized, setOptimized] = useState<boolean>(true);
   const groupRef = useRef<Group|null>(null);
-  const cameraRef = useRef<CameraControls>(null);
+  const cameraControlsRef = useRef<ExternalActionInterface| null>(null);
   
   const propsTaxi = useSpring({
     from: { z: -30, visible: false },
@@ -77,19 +80,12 @@ function ThreejsRenderer({
 
 
   useEffect(() => {
-   recenter();
-  },[base64Texture, cameraRef, groupRef])
-
-  
-  async function recenter() {
-    if(!cameraRef.current || !cameraRef.current) {
-      return;
+    if(cameraControlsRef.current && groupRef.current ) {
+      cameraControlsRef.current.recenter(groupRef.current);
     }
-    await cameraRef.current.setPosition(50, 10, 20, true);
-    await cameraRef.current.fitToBox(groupRef.current as Object3D, true,
-      { paddingLeft: 2, paddingRight: 2, paddingBottom: 2, paddingTop: 2 }
-    );
-  }
+  },[base64Texture, groupRef])
+  
+
 
   function computeMozaicScale() {
     const maxRatio = 1.9 // empirical value
@@ -99,6 +95,8 @@ function ThreejsRenderer({
     
     return ratio*maxRatio*expectedRatio/DEPTH_MAIN_BUILDING;
   }
+
+
 
   return (
     <div className="flex flex-col gap-5 w-full h-full">
@@ -146,7 +144,7 @@ function ThreejsRenderer({
                  </group>
                 {
                   (base64Texture || tilesData.length > 0) && <Text
-                    font={'fonts/good-bakwan.woff'}
+                    font={`${BASE_URL}/fonts/good-bakwan.woff`}
                     color={0x000000}
                     fontSize={1.2}
                     letterSpacing={0}
@@ -158,68 +156,68 @@ function ThreejsRenderer({
                     {artistName}
                   </Text>
                 }
-                <Gltf src={"buildings/skyscraper.glb"} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
+                <Gltf src={`${BASE_URL}/buildings/skyscraper.glb`} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                
                 <group position={[0, 0.2, 15]} >
-                  <Gltf src={"road.glb"} scale={1.25} position={[-25,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[-15,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[-5,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[5,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[-25,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[-15,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[-5,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[5,0,0]}  rotation={[ 0, Math.PI/2, 0]}/>
                 </group>
 
                 <group position={[0, 0.2, 0]} >
-                  <Gltf src={"road.glb"} scale={1.25} position={[15,0,-25]}  rotation={[ 0, 0, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[15,0,-15]}  rotation={[ 0, 0, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[15,0,-5]}  rotation={[ 0, 0, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[15,0,5]}  rotation={[ 0, 0, 0]}/>
-                  <Gltf src={"street-t.glb"} scale={1.25} position={[15,0,15]}  rotation={[ 0, 0, 0]}/>
-                  <Gltf src={"road.glb"} scale={1.25} position={[15,0,25]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[15,0,-25]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[15,0,-15]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[15,0,-5]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[15,0,5]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/street-t.glb`} scale={1.25} position={[15,0,15]}  rotation={[ 0, 0, 0]}/>
+                  <Gltf src={`${BASE_URL}/road.glb`} scale={1.25} position={[15,0,25]}  rotation={[ 0, 0, 0]}/>
                 </group>
 
-                <Gltf src={"buildings/skyscraper2.glb"} scale={[8.5,8.5, 16.5]} position={[-22,0.2,0]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"buildings/large-building3.glb"} scale={[8.5,8.5, 16.5]} position={[3,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
-                <Gltf src={"buildings/large-building3.glb"} scale={8.5} position={[-20,0.2,-22]}  rotation={[ 0, -Math.PI/2, 0]}/>
-                <Gltf src={"buildings/large-building.glb"} scale={8.5} position={[-20,0.2,24]}  rotation={[ 0, -Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/buildings/skyscraper2.glb`} scale={[8.5,8.5, 16.5]} position={[-22,0.2,0]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/buildings/large-building3.glb`} scale={[8.5,8.5, 16.5]} position={[3,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
+                <Gltf src={`${BASE_URL}/buildings/large-building3.glb`} scale={8.5} position={[-20,0.2,-22]}  rotation={[ 0, -Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/buildings/large-building.glb`} scale={8.5} position={[-20,0.2,24]}  rotation={[ 0, -Math.PI/2, 0]}/>
                 
 
-                <Gltf src={"patch-of-grass.glb"} scale={10} position={[-8, 0, -19]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"patch-of-grass.glb"} scale={10} position={[-8, 0, -25]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"patch-of-grass.glb"} scale={10} position={[-1, 0, -19]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"patch-of-grass.glb"} scale={10} position={[-1, 0, -25]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/patch-of-grass.glb`} scale={10} position={[-8, 0, -19]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/patch-of-grass.glb`} scale={10} position={[-8, 0, -25]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/patch-of-grass.glb`} scale={10} position={[-1, 0, -19]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/patch-of-grass.glb`} scale={10} position={[-1, 0, -25]}  rotation={[ 0, 0, 0]}/>
 
-                <Gltf src={"trees/tree.glb"} scale={1.5} position={[-5, 0, -14]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree2.glb"} scale={1.5} position={[6, 0, -14]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree3.glb"} scale={1.5} position={[6, 0, -20]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"trees/tree2.glb"} scale={1.5} position={[6, 0, -26]}  rotation={[ 0, Math.PI/4, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree.glb`} scale={1.5} position={[-5, 0, -14]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree2.glb`} scale={1.5} position={[6, 0, -14]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree3.glb`} scale={1.5} position={[6, 0, -20]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree2.glb`} scale={1.5} position={[6, 0, -26]}  rotation={[ 0, Math.PI/4, 0]}/>
 
-                <Gltf src={"field.glb"} scale={0.05} position={[-5, 0, 25]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"table.glb"} scale={2} position={[25, 0, -25]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"tent.glb"} scale={4} position={[22, 0, -22]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"rock-flat.glb"} scale={3} position={[26, 0, -19]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -19]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -20]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -21]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -22]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -23]}  rotation={[ 0, Math.PI/2, 0]}/>
-                <Gltf src={"fence.glb"} scale={3} position={[20, 0, -24]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/field.glb`} scale={0.05} position={[-5, 0, 25]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/table.glb`} scale={2} position={[25, 0, -25]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/tent.glb`} scale={4} position={[22, 0, -22]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/rock-flat.glb`} scale={3} position={[26, 0, -19]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -19]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -20]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -21]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -22]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -23]}  rotation={[ 0, Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/fence.glb`} scale={3} position={[20, 0, -24]}  rotation={[ 0, Math.PI/2, 0]}/>
 
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 1]}  rotation={[ 0, -Math.PI/2, 0]}/>
-                <Gltf src={"trees/tree2.glb"} scale={1.25}  position={[27, 0, 5]}  rotation={[ 0, -Math.PI/6, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[23, 0, 10]}  rotation={[ 0, -Math.PI/4, 0]}/>
-                <Gltf src={"trees/tree2.glb"} scale={1}  position={[28, 0, 11]}  rotation={[ 0, -Math.PI/4, 0]}/>
-                <Gltf src={"trees/tree3.glb"} scale={0.85}  position={[23, 0, 15]}  rotation={[ 0, Math.PI, 0]}/>
-                <Gltf src={"trees/tree2.glb"} scale={1}  position={[27, 0, 15]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree3.glb"} scale={1}  position={[24, 0, 20]}  rotation={[ 0, 0, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1}  position={[28, 0, 22]}  rotation={[ 0, -Math.PI/3, 0]}/>
-                <Gltf src={"trees/tree.glb"} scale={1.25}  position={[24, 0, 25]}  rotation={[ 0, -Math.PI/3, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree.glb`} scale={1.25}  position={[24, 0, 1]}  rotation={[ 0, -Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree2.glb`} scale={1.25}  position={[27, 0, 5]}  rotation={[ 0, -Math.PI/6, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree.glb`} scale={1.25}  position={[23, 0, 10]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree2.glb`} scale={1}  position={[28, 0, 11]}  rotation={[ 0, -Math.PI/4, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree3.glb`} scale={0.85}  position={[23, 0, 15]}  rotation={[ 0, Math.PI, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree2.glb`} scale={1}  position={[27, 0, 15]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree3.glb`} scale={1}  position={[24, 0, 20]}  rotation={[ 0, 0, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree.glb`} scale={1}  position={[28, 0, 22]}  rotation={[ 0, -Math.PI/3, 0]}/>
+                <Gltf src={`${BASE_URL}/trees/tree.glb`} scale={1.25}  position={[24, 0, 25]}  rotation={[ 0, -Math.PI/3, 0]}/>
                 
-                <Gltf src={"wheel.glb"} scale={5}  position={[24, 6, -9]}  rotation={[ 0, -Math.PI/2, 0]}/>
+                <Gltf src={`${BASE_URL}/wheel.glb`} scale={5}  position={[24, 6, -9]}  rotation={[ 0, -Math.PI/2, 0]}/>
 
               <animated.group
                   visible={propsTaxi.visible}
                   >
                   <AnimatedGltf
-                    src={"cars/taxi.glb"}
+                    src={`${BASE_URL}/cars/taxi.glb`}
                     scale={0.5}
                     position-x={13}
                     position-y={0}
@@ -232,7 +230,7 @@ function ThreejsRenderer({
                   visible={propsTruck.visible}
                   >
                   <AnimatedGltf
-                    src={"cars/truck.glb"}
+                    src={`${BASE_URL}/cars/truck.glb`}
                     scale={0.015}
                     position-x={17}
                     position-y={0}
@@ -242,7 +240,7 @@ function ThreejsRenderer({
                 </animated.group>
 
                 <GrassTerrain />
-                { import.meta.env.MODE === "development" &&
+                { MODE === "development" &&
                   <Grid args={[60, 60]} position={[0,0,0]} cellColor='white' />
                 }
             </Stage>
@@ -250,14 +248,9 @@ function ThreejsRenderer({
           <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
             <GizmoViewport labelColor="white" axisHeadScale={1} />
           </GizmoHelper>
-          <CameraControls
-            makeDefault
-            maxDistance={80}
-            minPolarAngle={0}
-            maxPolarAngle={Math.PI / 1.9}
-            minAzimuthAngle={0.5}
-            maxAzimuthAngle={1.9}
-            ref={cameraRef}
+          <CustomCameraControls
+            ref={cameraControlsRef}
+            speed={2.5}
           />
         </Canvas>
       </div>

@@ -6,6 +6,8 @@ import { useSpringRef, easings, useTrail} from '@react-spring/web';
 import { rgbToHex } from "../../utils";
 import { TileData } from "../Hooks/useMozaic";
 
+const { BASE_URL } = import.meta.env;
+
 interface MozaicInstanceMeshProps {
   width: number;
   height: number;
@@ -33,10 +35,10 @@ function MozaicInstanceMesh({
   }: MozaicInstanceMeshProps)
 {
     const [displacementMap, normalMap, roughnessMap, aoMap] = useLoader(TextureLoader, [
-      'plastic_0021/reduced/height_1k.png',
-      'plastic_0021/reduced/normal_1k.png',
-      'plastic_0021/reduced/roughness_1k.jpg',
-      'plastic_0021/reduced/ao_1k.jpg',
+      `${BASE_URL}/plastic_0021/reduced/height_1k.png`,
+      `${BASE_URL}/plastic_0021/reduced/normal_1k.png`,
+      `${BASE_URL}/plastic_0021/reduced/roughness_1k.jpg`,
+      `${BASE_URL}/plastic_0021/reduced/ao_1k.jpg`,
     ]);
     const meshRef = useRef<InstancedMesh>(null);
     const geometry = useMemo(() => new BoxGeometry(tileSize - padding, tileSize - padding, tileSize - padding), [tileSize, padding]);

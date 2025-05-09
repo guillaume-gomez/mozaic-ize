@@ -1,9 +1,3 @@
-## References
-https://towardsdatascience.com/how-to-generate-roman-style-mosaics-with-python-11d5aa021b09
-
-https://help.accusoft.com/ImageGear-Net/v25.0/Windows/HTML/Mosaic_Effect.html#:~:text=The%20mosaic%20effect%20divides%20a,Image%20with%20Mosaic%20Effect
-
-
 ## Assets
 
 ### 3d models
@@ -60,9 +54,16 @@ https://poly.pizza/m/cPVFA5uTr9l
 #### wheel
 https://poly.pizza/m/1VmmK6Gus8f
 
-
-## website font
+### website font
 https://www.dafont.com/fr/street-corner.font
+
+
+## References
+https://towardsdatascience.com/how-to-generate-roman-style-mosaics-with-python-11d5aa021b09
+
+https://help.accusoft.com/ImageGear-Net/v25.0/Windows/HTML/Mosaic_Effect.html#:~:text=The%20mosaic%20effect%20divides%20a,Image%20with%20Mosaic%20Effect
+
+
 
 
 ## signature font 
