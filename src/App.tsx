@@ -211,7 +211,7 @@ function App() {
               </div>
 
           </div>
-          <div ref={goToFinalResultDivRef} className="lg:basis-8/12 md:basis-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
+          <div ref={goToFinalResultDivRef} className="lg:w-8/12 md:w-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
              {  !twoDimension &&
                 <ThreeJsRenderer
                   widthMozaic={width}
