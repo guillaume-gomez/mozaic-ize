@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -20,6 +20,7 @@ function App() {
   const [artistName, setArtistName]= useState<string>("Made by Guillaume G");
   const [dataUrl, setDataUrl] = useState<string>("");
   const [isDirty, setIsDirty] = useState<boolean>(false);
+  const goToFinalResultDivRef = useRef<HTMLDivElement>(null)
   // to conditionnaly hide some items
   const [firstRender, setFirstRender] = useState<boolean>(true);
   const {
@@ -92,6 +93,14 @@ function App() {
     setDataUrl(dataUrl);
     setIsDirty(false);
     setFirstRender(false);
+    
+    // scrollIntoView does not work on async function
+    setTimeout(() => {
+      if(goToFinalResultDivRef.current) {
+        goToFinalResultDivRef.current.scrollIntoView({behavior: "smooth", block: 'center' });
+      }
+    }, 750);
+
     apiDiv.start();
   }
 
@@ -202,7 +211,7 @@ function App() {
               </div>
 
           </div>
-          <div className="lg:basis-8/12 md:basis-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
+          <div ref={goToFinalResultDivRef} className="lg:basis-8/12 md:basis-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl">
              {  !twoDimension &&
                 <ThreeJsRenderer
                   widthMozaic={width}
@@ -228,8 +237,6 @@ function App() {
               }
           </div>
         </div>
-
-
       </div>
     </div>
   )
