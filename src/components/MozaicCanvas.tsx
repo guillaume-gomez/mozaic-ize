@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Range from "./Range";
+import SaveImageButton from "./SaveImageButton";
 import { TileData } from "./Hooks/useMozaic";
 import { rgbToHex } from "../utils";
 
@@ -66,7 +67,7 @@ function MozaicCanvas({
 
 
     return (
-        <div>
+        <div className="flex flex-col gap-5 bg-black">
             <Range
               min={0}
               max={10}
@@ -75,6 +76,11 @@ function MozaicCanvas({
               onChange={setShadowBlur}
             />
             <canvas ref={canvasRef} width={width} height={height}/>
+            <SaveImageButton
+              label="Download"
+              canvasRef={canvasRef}
+              filename="mozaic-ize"
+            />
         </div>
     )
 }
