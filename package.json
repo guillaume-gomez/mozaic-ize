@@ -23,6 +23,7 @@
     "@types/three": "^0.171.0",
     "color-convert": "^2.0.1",
     "colorthief": "^2.6.0",
+    "date-fns": "^4.1.0",
     "gh-pages": "^6.3.0",
     "lodash": "^4.17.21",
     "postprocessing": "^6.36.4",

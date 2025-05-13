@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Range from "./Range";
+import SaveImageButton from "./SaveImageButton";
 import { TileData } from "./Hooks/useMozaic";
 import { rgbToHex } from "../utils";
 
@@ -21,7 +22,8 @@ function MozaicCanvas({
   height
 }: MozaicCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [shadowBlur, setShadowBlur] = useState<number>(10);
+  const [shadowBlur, setShadowBlur] = useState<number>(0);
+  const [shadow, setShadow] = useState<number>(0);
 
   useEffect(() => {
     if(!canvasRef.current) {
@@ -40,11 +42,10 @@ function MozaicCanvas({
     context.fillRect(0,0, width, height);
 
     drawTiles(context, tilesData, tileSize - padding);
-  }, [tilesData, canvasRef, backgroundColor])
+  }, [tilesData, canvasRef, backgroundColor, shadow, shadowBlur])
 
   function drawTiles(context: CanvasRenderingContext2D, tilesData: TileData[], tileSize: number) {
     context.shadowColor = "black";
-    const shadow = Math.floor(Math.sqrt(tileSize));
     context.shadowOffsetX = shadow;
     context.shadowOffsetY = shadow;
     context.shadowBlur = shadowBlur;
@@ -66,15 +67,35 @@ function MozaicCanvas({
 
 
     return (
-        <div>
+        <div className="flex flex-col gap-3 bg-black p-2">
             <Range
               min={0}
-              max={10}
+              max={20}
+              label={"Shadow"}
+              value={shadow}
+              onChange={setShadow}
+            />
+            <Range
+              min={0}
+              max={20}
               label={"Shadow Blur"}
               value={shadowBlur}
               onChange={setShadowBlur}
             />
-            <canvas ref={canvasRef} width={width} height={height}/>
+            <canvas
+              ref={canvasRef}
+              width={width}
+              height={height}
+              style={{
+                aspectRatio: `${width}/${height}`,
+                width: `min(100%, 75vh * (${width}/${height}))`
+              }}
+            />
+            <SaveImageButton
+              label="Download"
+              canvasRef={canvasRef}
+              filename="mozaic-ize"
+            />
         </div>
     )
 }
