@@ -61,7 +61,7 @@ function App() {
       easing: easings.easeInOutCubic,
       duration: 1000,
     },
-    from: { height: 100 },
+    from: { height: 200 },
     to: { height: 525 },
     // chaining the second animation
     onRest: () => { apiForm.start() }
@@ -189,7 +189,7 @@ function App() {
                       ]}
                     />
                     <Toggle
-                      label="See the plain mozaic image (2d version)"
+                      label="Show see the plain mozaic image (2d version)"
                       value={twoDimension}
                       toggle={() => setTwoDimension(!twoDimension)}
                     />
@@ -228,7 +228,7 @@ function App() {
                 />
               }
               {
-                twoDimension && 
+                twoDimension &&
                 <MozaicCanvas
                   backgroundColor={backgroundColor}
                   tileSize={tileSize}
