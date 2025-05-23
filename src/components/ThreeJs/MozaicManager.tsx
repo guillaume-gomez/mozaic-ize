@@ -1,5 +1,6 @@
 import { useLoader } from '@react-three/fiber';
 import { BoxGeometry, RepeatWrapping, TextureLoader } from 'three';
+import { useEffect } from "react";
 
 const { BASE_URL } = import.meta.env;
 
@@ -32,19 +33,25 @@ function MozaicManager({
       `${BASE_URL}/plastic_0021/reduced/ao_1k.jpg`,
     ]);
 
-    normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
-    normalMap.offset.set( offset, offset );
-    normalMap.wrapS = RepeatWrapping;
-    normalMap.wrapT = RepeatWrapping;
+    // we don't want to compute when the tilesize only change because the render does not fit the texture.
+    // So we only recompute when the texture has changed (meaning the user clicked on generate)
+    useEffect(() => {
+      normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
+      normalMap.offset.set( offset, offset );
+      normalMap.wrapS = RepeatWrapping;
+      normalMap.wrapT = RepeatWrapping;
 
-    roughnessMap.repeat.set( 1, 1 );
-    roughnessMap.wrapS = RepeatWrapping;
-    roughnessMap.wrapT = RepeatWrapping;
+      roughnessMap.repeat.set( 1, 1 );
+      roughnessMap.wrapS = RepeatWrapping;
+      roughnessMap.wrapT = RepeatWrapping;
 
-    aoMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
-    aoMap.offset.set( offset, offset );
-    aoMap.wrapS = RepeatWrapping;
-    aoMap.wrapT = RepeatWrapping;
+      aoMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
+      aoMap.offset.set( offset, offset );
+      aoMap.wrapS = RepeatWrapping;
+      aoMap.wrapT = RepeatWrapping;
+
+    }, [base64Texture])
+
 
   return (
     <mesh
