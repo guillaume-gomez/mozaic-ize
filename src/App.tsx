@@ -62,7 +62,7 @@ function App() {
       duration: 1000,
     },
     from: { height: 200 },
-    to: { height: 525 },
+    to: { height: 600 },
     // chaining the second animation
     onRest: () => { apiForm.start() }
   })
@@ -104,16 +104,14 @@ function App() {
     apiDiv.start();
   }
 
-  // pour le bouton, le faire passer de - sa position initiale à sa position finale
-
   return (
     <div className="bg-base-300">
-      <div className="relative container m-auto flex-col h-screen gap-5 lg:p-2 p-4">
+      <div className="relative container m-auto flex-col min-h-screen md:h-screen h-full gap-5 lg:p-2 p-4">
         <img src={dataUrl} className="hidden" />
         <div className="h-full flex md:flex-row flex-col gap-4 flex-grow">
           <div className="lg:basis-4/12 md:basis-5/12 basis-auto content-center">
 
-              <div className="flex flex-col gap-8 p-4">
+              <div className="flex flex-col gap-8 md:p-4">
                 <div className="">
                   <h2 className="md:text-6xl text-3xl font-extrabold">
                     <p>
@@ -213,7 +211,7 @@ function App() {
           </div>
           <div
             ref={goToFinalResultDivRef}
-            className={`lg:w-8/12 md:w-7/12 basis-auto bg-gradient-to-b from-sky-100 to-sky-500 rounded-xl`}
+            className={`lg:w-8/12 md:w-7/12 basis-auto bg-gradient-to-b ${twoDimension ? 'black' : 'from-sky-100 to-sky-500'} rounded-xl`}
           >
              {  !twoDimension &&
                 <ThreeJsRenderer
