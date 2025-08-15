@@ -104,7 +104,9 @@ function ThreejsRenderer({
         value={optimized}
         toggle={() => setOptimized(!optimized)}
       />
-      <div ref={canvasContainerRef} className="w-full h-full /*bg-secondary*/ bg-gradient-to-b from-sky-100 to-sky-500  rounded-xl">
+      <div ref={canvasContainerRef} 
+        className="hover:cursor-grabbing w-full h-full /*bg-secondary*/ bg-gradient-to-b from-sky-100 to-sky-500  rounded-xl"
+      >
         <Canvas
           camera={{ position: [50,10, 20], fov: 75, far: 200 }}
           dpr={window.devicePixelRatio}
