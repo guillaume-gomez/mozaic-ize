@@ -47,7 +47,7 @@ function ThreejsRenderer({
   const {
     toggleFullscreen,
   } = useFullscreen({ target: canvasContainerRef });
-  const [optimized, setOptimized] = useState<boolean>(true);
+  const [optimized, /* setOptimized */] = useState<boolean>(true);
   const groupRef = useRef<Group|null>(null);
   const cameraControlsRef = useRef<ExternalActionInterface| null>(null);
   
@@ -99,11 +99,11 @@ function ThreejsRenderer({
 
   return (
     <div className="flex flex-col gap-5 w-full h-full">
-      <Toggle
+      {/*<Toggle
         label="Optimized"
         value={optimized}
         toggle={() => setOptimized(!optimized)}
-      />
+      />*/}
       <div ref={canvasContainerRef} 
         className="hover:cursor-grabbing w-full h-full /*bg-secondary*/ bg-gradient-to-b from-sky-100 to-sky-500  rounded-xl"
       >
