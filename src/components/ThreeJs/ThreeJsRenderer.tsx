@@ -2,7 +2,7 @@ import { useRef, Suspense, useEffect, useState } from 'react';
 import { useFullscreen } from "rooks";
 import { Group } from "three";
 import { Canvas } from '@react-three/fiber';
-import Toggle from "../Toggle";
+// import Toggle from "../Toggle";
 import { 
   animated, 
   useSpring,
