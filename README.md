@@ -1,3 +1,7 @@
+# Mozaic ize
+
+Render any image into a mozaic street art in the highest building in the city !
+
 ## Assets
 
 ### 3d models
