@@ -2,6 +2,14 @@
 
 Render any image into a mozaic street art in the highest building in the city !
 
+## Examples
+
+### 2D
+![mozaic-ize-30-09-2025-12-51 (2)](https://github.com/user-attachments/assets/5cce8162-b268-430d-b7a5-3d05e2737518)
+
+### 3D
+<img width="741" height="669" alt="Capture d’écran 2025-10-01 à 09 36 39" src="https://github.com/user-attachments/assets/4540d0b7-c489-4868-b9cc-8a0294c15a3d" />
+
 ## Assets
 
 ### 3d models
