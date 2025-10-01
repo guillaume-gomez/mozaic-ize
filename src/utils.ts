@@ -15,6 +15,8 @@ function resizeImageCanvas(originCanvas: HTMLCanvasElement, targetCanvas: HTMLCa
   targetCanvas.width = expectedWidth;
   targetCanvas.height = expectedHeight;
 
+  // clear react before drawing resized image
+  contextTarget.clearRect(0,0, expectedWidth, expectedHeight);
   contextTarget.drawImage(
     canvasBuffer,
     0,
