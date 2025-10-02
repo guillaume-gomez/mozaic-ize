@@ -9,7 +9,7 @@ import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 import Toggle from "./components/Toggle";
 import { useSpring, animated, useSpringRef, easings } from '@react-spring/web'
-import StarButton from "./components/StarButton";
+import StarMessage from "./components/StarMessage";
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
@@ -207,13 +207,12 @@ function App() {
                     </div>
                   }
                   { image && !firstRender && 
-                    <span className="text-xs pt-2 flex flex-row items-center gap-1">
-                        Did you enjoyed ? 😊 Star the project
-                        <StarButton 
-                          projectName="mozaic-ize"
-                          projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
-                        />
-                    </span>
+                    <div className="md:block hidden">
+                      <StarMessage
+                        projectName="mozaic-ize"
+                        projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+                      />
+                    </div>
                   }
                 </animated.div>
               </div>
@@ -246,6 +245,12 @@ function App() {
                   height={height}
                 />
               }
+          </div>
+          <div className="md:hidden block">
+            <StarMessage
+              projectName="mozaic-ize"
+              projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+            />
           </div>
         </div>
       </div>
