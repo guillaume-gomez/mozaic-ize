@@ -41,8 +41,7 @@ function App() {
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
-    setImage(newImage)
-
+    
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
@@ -207,7 +206,15 @@ function App() {
                       </button>
                     </div>
                   }
-                  { image && !firstRender && <span className="text-xs pt-3">Did you enjoyed ? 😊 Star the project <StarButton projectName="mozaic-ize" /> </span> }
+                  { image && !firstRender && 
+                    <span className="text-xs pt-2 flex flex-row items-center gap-1">
+                        Did you enjoyed ? 😊 Star the project
+                        <StarButton 
+                          projectName="mozaic-ize"
+                          projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+                        />
+                    </span>
+                  }
                 </animated.div>
               </div>
 
