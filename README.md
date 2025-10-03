@@ -4,6 +4,10 @@ Render any image into a mozaic street art in the highest building in the city !
 
 ## Examples
 
+### Original
+
+<img width="1788" height="1662" alt="_Socrate" src="https://github.com/user-attachments/assets/b2bf95ff-b9dc-4003-9b02-a60bac61ea8e" />
+
 ### 2D
 ![mozaic-ize-30-09-2025-12-51 (2)](https://github.com/user-attachments/assets/5cce8162-b268-430d-b7a5-3d05e2737518)
 
