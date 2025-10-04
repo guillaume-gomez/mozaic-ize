@@ -6,9 +6,7 @@ function resizeImageCanvas(originCanvas: HTMLCanvasElement, targetCanvas: HTMLCa
   // resize to 50%
   canvasBuffer.width = originCanvas.width * 0.5;
   canvasBuffer.height = originCanvas.height * 0.5;
-  contextBuffer.drawImage(originCanvas, 0, 0, canvasBuffer.width, canvasBuffer.height);
-
-  contextBuffer.drawImage(canvasBuffer, 0, 0, canvasBuffer.width * 0.5, canvasBuffer.height * 0.5);
+  contextBuffer.drawImage(originCanvas, 0, 0, canvasBuffer.width * 0.5, canvasBuffer.height * 0.5);
 
   const contextTarget = getContext(targetCanvas);
 
