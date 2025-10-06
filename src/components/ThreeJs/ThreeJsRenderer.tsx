@@ -250,9 +250,11 @@ function ThreejsRenderer({
                   }
               </Suspense>
             </Stage>
-          <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
-            <GizmoViewport labelColor="white" axisHeadScale={1} />
-          </GizmoHelper>
+          { MODE === "development" &&
+            <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
+              <GizmoViewport labelColor="white" axisHeadScale={1} />
+            </GizmoHelper>
+          }
           <CustomCameraControls
             ref={cameraControlsRef}
             speed={2.5}
