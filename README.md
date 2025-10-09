@@ -4,15 +4,31 @@ Render any image into a mozaic street art in the highest building in the city !
 
 ## Examples
 
-### Original
+### Socrate
+
+#### Original
 
 <img width="1788" height="1662" alt="_Socrate" src="https://github.com/user-attachments/assets/b2bf95ff-b9dc-4003-9b02-a60bac61ea8e" />
 
-### 2D
+#### 2D
 ![mozaic-ize-30-09-2025-12-51 (2)](https://github.com/user-attachments/assets/5cce8162-b268-430d-b7a5-3d05e2737518)
 
-### 3D
+#### 3D
 <img width="741" height="669" alt="Capture d’écran 2025-10-01 à 09 36 39" src="https://github.com/user-attachments/assets/4540d0b7-c489-4868-b9cc-8a0294c15a3d" />
+
+### Mario
+
+#### Original
+<img width="724" height="1104" alt="2d_mario_jumping__by_gabrielmarioandsonic_dfu9iji-pre-2874316891" src="https://github.com/user-attachments/assets/2430207e-4909-4363-b677-90a4b11ffd3f" />
+
+#### 2D
+![mozaic-ize-08-10-2025-09-31 (1)](https://github.com/user-attachments/assets/17272b84-e5a6-457a-b5ad-bbe5f207523d)
+
+![mozaic-ize-08-10-2025-09-31](https://github.com/user-attachments/assets/73b5308a-bac2-4637-af8e-439e46468e89)
+
+#### 3D
+
+<img width="538" height="684" alt="Capture d’écran 2025-10-08 à 09 29 33" src="https://github.com/user-attachments/assets/5ef57a0f-c7e7-4adc-b7be-e07432e8a1be" />
 
 ## Assets
 
