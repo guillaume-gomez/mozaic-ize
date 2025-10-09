@@ -9,6 +9,7 @@ import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 import Toggle from "./components/Toggle";
 import { useSpring, animated, useSpringRef, easings } from '@react-spring/web'
+import StarButton from "./components/StarButton";
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
@@ -40,7 +41,7 @@ function App() {
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
-
+    
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
@@ -204,6 +205,15 @@ function App() {
                         Generate
                       </button>
                     </div>
+                  }
+                  { image && !firstRender && 
+                    <span className="text-xs pt-2 flex flex-row items-center gap-1">
+                        Did you enjoyed ? 😊 Star the project
+                        <StarButton 
+                          projectName="mozaic-ize"
+                          projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+                        />
+                    </span>
                   }
                 </animated.div>
               </div>
