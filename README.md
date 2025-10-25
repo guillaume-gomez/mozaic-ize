@@ -2,6 +2,9 @@
 
 Render any image into a mozaic street art in the highest building in the city !
 
+[preview.webm](https://github.com/user-attachments/assets/497f2eba-4776-4ed8-8243-c3eee0727151)
+
+
 ## Examples
 
 ### Socrate
