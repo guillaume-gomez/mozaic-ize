@@ -9,6 +9,7 @@ import { resizeImage } from "./utils";
 import useMozaic from "./components/Hooks/useMozaic";
 import Toggle from "./components/Toggle";
 import { useSpring, animated, useSpringRef, easings } from '@react-spring/web'
+import StarMessage from "./components/StarMessage";
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
@@ -40,7 +41,7 @@ function App() {
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
-
+    
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
@@ -205,6 +206,14 @@ function App() {
                       </button>
                     </div>
                   }
+                  { image && !firstRender && 
+                    <div className="md:block hidden">
+                      <StarMessage
+                        projectName="mozaic-ize"
+                        projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+                      />
+                    </div>
+                  }
                 </animated.div>
               </div>
 
@@ -236,6 +245,12 @@ function App() {
                   height={height}
                 />
               }
+          </div>
+          <div className="md:hidden block">
+            <StarMessage
+              projectName="mozaic-ize"
+              projectUrl="https://github.com/guillaume-gomez/mozaic-ize"
+            />
           </div>
         </div>
       </div>
