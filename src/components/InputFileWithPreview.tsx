@@ -33,7 +33,12 @@ function InputFileWithPreview({onChange, value} : InputFileWithPreviewProps) {
       {
         value ?
         <img src={value.src} style={{ minWidth: "32px", maxWidth: "64px"}}/> :
-        <span>Nothing to render</span>
+        <div
+          className="d-flex items-center align-items-center rounded"
+          style={{ minWidth: "32px", maxWidth: "64px", border: "2px dashed white"}}
+        >
+          <span className="text-xs">Nothing to render</span>
+        </div>
 
       }
     </div>
