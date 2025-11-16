@@ -65,6 +65,7 @@ const CustomCameraControls = forwardRef<ExternalActionInterface, CustomCameraCon
 
   return (<CameraControls
       makeDefault
+      minDistance={1}
       maxDistance={80}
       minPolarAngle={0}
       maxPolarAngle={Math.PI / 1.9}
