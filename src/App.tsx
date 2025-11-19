@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -54,6 +54,10 @@ function App() {
       uploadImage(originalImage);
     }
   }, [tileSize]);
+
+  // memoize the size to avoid any rerender without clicking on generate
+  const expectedWidth = useMemo(() => width, [dataUrl]);
+  const expectedHeight = useMemo(() => height, [dataUrl]);
 
   const apiDiv = useSpringRef()
   const propsDiv = useSpring({
@@ -224,8 +228,8 @@ function App() {
           >
              {  !twoDimension &&
                 <ThreeJsRenderer
-                  widthMozaic={width}
-                  heightMozaic={height}
+                  widthMozaic={expectedWidth}
+                  heightMozaic={expectedHeight}
                   base64Texture={dataUrl}
                   tilesData={tilesData}
                   tileSize={tileSize}
@@ -241,8 +245,8 @@ function App() {
                   tileSize={tileSize}
                   padding={padding}
                   tilesData={tilesData}
-                  width={width}
-                  height={height}
+                  width={expectedWidth}
+                  height={expectedHeight}
                 />
               }
           </div>
