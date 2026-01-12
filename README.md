@@ -110,3 +110,6 @@ https://help.accusoft.com/ImageGear-Net/v25.0/Windows/HTML/Mosaic_Effect.html#:~
 ## signature font 
 https://www.dafont.com/fr/good-bakwan.font converted with [CloudConvert](
 https://cloudconvert.com/otf-to-woff)
+
+### Possible improvment:
+https://80.lv/articles/using-substace-3d-marmoset-toolbag-to-make-ceramic-tiles-material
