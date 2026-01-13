@@ -38,7 +38,7 @@ function getContext(canvas:  HTMLCanvasElement) : CanvasRenderingContext2D {
 
 
 
-export function resizeImage(image: HTMLImageElement, expectedWidth: number, expectedHeight : number) : HTMLImageElement {
+export async function resizeImage(image: HTMLImageElement, expectedWidth: number, expectedHeight : number) : Promise<HTMLImageElement> {
   const canvasBuffer = document.createElement("canvas");
   const contextBuffer = getContext(canvasBuffer);
 
@@ -51,15 +51,15 @@ export function resizeImage(image: HTMLImageElement, expectedWidth: number, expe
 
   // mutate canvasTarget
   resizeImageCanvas(canvasBuffer, canvasTarget, expectedWidth, expectedHeight);
+  return new Promise((resolve, reject) => {
+    const resizedImage = new Image();
+    resizedImage.width = expectedWidth;
+    resizedImage.height = expectedHeight;
 
-  const resizedImage = new Image();
-  
-  resizedImage.width = expectedWidth;
-  resizedImage.height = expectedHeight;
-
-  resizedImage.onload = () => {};
-  resizedImage.src = canvasTarget.toDataURL();
-  return resizedImage;
+    resizedImage.addEventListener('load', () => resolve(resizedImage));
+    resizedImage.addEventListener('error', (err) => reject(err));
+    resizedImage.src = canvasTarget.toDataURL();
+  });
 }
 
 function componentToHex(c: number) : string {

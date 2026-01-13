@@ -59,26 +59,3 @@ export function extendPalette(palette: pixel[], saturationLevel: number = 20, hu
 export function fromPaletteToPaletteColor(palette: pixel[]) : PaletteColor[] {
   return palette.map(value => ({red: value[0], green: value[1], blue: value[2] }) );
 }
-
-export function drawPalette(canvasId: string, palette: pixel[]) : void {
-  let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-  if (!canvas.getContext) {
-    throw new Error("cannot find canvas to draw palette");
-  }
-  let context = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-  const nbBaseColor = palette.length / 4; // original palette + 3 more palettes
-  
-  const widthColor = canvas.width / nbBaseColor;
-  const heightColor = widthColor;
-
-  const yMax = palette.length / nbBaseColor;
-
-  for(let y = 0; y < yMax; ++y) {
-    for(let x = 0; x < nbBaseColor; ++x) {
-      const [red, green, blue] = palette[x + y * nbBaseColor];
-      context.fillStyle = `rgb(${red}, ${green}, ${blue})`;
-      context.fillRect(widthColor * x, heightColor * y, widthColor, heightColor);
-    }
-  }
-}

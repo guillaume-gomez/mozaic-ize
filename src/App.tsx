@@ -13,7 +13,6 @@ import StarMessage from "./components/StarMessage";
 
 function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
-  const [image, setImage] = useState<HTMLImageElement>();
   const [twoDimension, setTwoDimension] =  useState<boolean>(false);
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
   const [width, setWidth] =  useState<number>(1024);
@@ -39,9 +38,6 @@ function App() {
     const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
     const expectedHeight = newImage.height + (tileSize - (newImage.height % tileSize))
     
-    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
-    setImage(resizedImage);
-    
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
@@ -50,6 +46,7 @@ function App() {
   }
 
   useEffect(() => {
+    //improve this
     if(originalImage) {
       uploadImage(originalImage);
     }
@@ -85,16 +82,17 @@ function App() {
   })
 
   async function generate() {
-    if(!image) {
+    if(!originalImage) {
       console.error("Image is not loaded")
       return;
     }
-    const dataUrl = await generateImage(image, imageColorMode);
+    const resizedImage = await resizeImage(originalImage, width, height);
+    const dataUrl = await generateImage(resizedImage, imageColorMode);
+    
     if(!dataUrl) {
       console.error("Cannot generate image");
       return;
     }
-
     setDataUrl(dataUrl);
     setIsDirty(false);
     setFirstRender(false);
@@ -130,7 +128,7 @@ function App() {
                 <animated.div style={propsDiv} className="flex flex-col gap-3">
                   <div>
                     <label>Upload an image for start</label>
-                    <InputFileWithPreview onChange={uploadImage} value={image} />
+                    <InputFileWithPreview onChange={uploadImage} value={originalImage} />
                   </div>
                   {!firstRender &&
                   <animated.div style={propsForm}>
@@ -198,7 +196,7 @@ function App() {
                     />
                   </animated.div>
                   }
-                  { image && 
+                  { originalImage && 
                     <div className="form-control flex flex-col gap-1">
                       <label className="text-success">{ firstRender ? "Great! Then press generate to make some magic" : "Play around with the settings now !"}</label>
                       <button
@@ -210,7 +208,7 @@ function App() {
                       </button>
                     </div>
                   }
-                  { image && !firstRender && 
+                  { originalImage && !firstRender && 
                     <div className="md:block hidden">
                       <StarMessage
                         projectName="mozaic-ize"

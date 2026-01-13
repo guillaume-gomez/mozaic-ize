@@ -80,10 +80,12 @@ function ThreejsRenderer({
 
 
   useEffect(() => {
-    if(cameraControlsRef.current && groupRef.current ) {
-      cameraControlsRef.current.recenter(groupRef.current);
-    }
-  },[base64Texture, groupRef])
+    setTimeout(() => {
+      if(cameraControlsRef.current && groupRef.current) {
+        cameraControlsRef.current.recenter(groupRef.current);  
+      }
+    }, 100);
+  },[groupRef, tilesData]);
   
 
 
@@ -91,11 +93,10 @@ function ThreejsRenderer({
     const maxRatio = 1.9 // empirical value
     const expectedRatio = 17 // same
 
-    const ratio = widthMozaic > heightMozaic ? widthMozaic/widthMozaic : widthMozaic/heightMozaic
+    const ratio = widthMozaic > heightMozaic ? widthMozaic/widthMozaic : widthMozaic/heightMozaic;
     
     return ratio*maxRatio*expectedRatio/DEPTH_MAIN_BUILDING;
   }
-
 
   return (
     <div className="flex flex-col gap-5 w-full h-full">
@@ -122,14 +123,14 @@ function ThreejsRenderer({
                
                 <group ref={groupRef} position={[-4.5,30,0]} scale={computeMozaicScale()} rotation={[0,Math.PI/2, 0]}>
                   {base64Texture &&
-                      <MozaicManager
-                        base64Texture={base64Texture}
-                        widthMozaic={widthMozaic}
-                        heightMozaic={heightMozaic}
-                        tileSize={tileSize}
-                        visible={optimized}
+                       <MozaicManager
+                         base64Texture={base64Texture}
+                         widthMozaic={widthMozaic}
+                         heightMozaic={heightMozaic}
+                         tileSize={tileSize}
+                         visible={optimized}
                       />
-                   } 
+                   }
                    {tilesData.length > 0 &&
                       <MozaicInstanceMesh
                         width={widthMozaic}
@@ -140,7 +141,7 @@ function ThreejsRenderer({
                         tilesData={tilesData}
                         visible={!optimized}
                       />
-                    }
+                   }
                  </group>
                 
                 <Suspense fallback={<FallBackLoader/>}>

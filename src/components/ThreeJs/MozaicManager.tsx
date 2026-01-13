@@ -32,7 +32,6 @@ function MozaicManager({
       `${BASE_URL}/plastic_0021/reduced/roughness_1k.jpg`,
       `${BASE_URL}/plastic_0021/reduced/ao_1k.jpg`,
     ]);
-
     // we don't want to compute when the tilesize only change because the render does not fit the texture.
     // So we only recompute when the texture has changed (meaning the user clicked on generate)
     useEffect(() => {
