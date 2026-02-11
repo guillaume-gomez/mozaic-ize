@@ -80,12 +80,13 @@ function ThreejsRenderer({
 
 
   useEffect(() => {
+    // need setTimeout because cameraControlsRef needs time
     setTimeout(() => {
       if(cameraControlsRef.current && groupRef.current) {
         cameraControlsRef.current.recenter(groupRef.current);  
       }
-    }, 100);
-  },[groupRef, tilesData]);
+    }, 150);
+  },[groupRef, tilesData, cameraControlsRef]);
   
 
 
