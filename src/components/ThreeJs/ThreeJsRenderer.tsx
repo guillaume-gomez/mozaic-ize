@@ -121,7 +121,7 @@ function ThreejsRenderer({
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.0} />
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment="city">
-               
+               <Suspense fallback={<FallBackLoader/>}>
                 <group ref={groupRef} position={[-4.5,30,0]} scale={computeMozaicScale()} rotation={[0,Math.PI/2, 0]}>
                   {base64Texture &&
                        <MozaicManager
@@ -145,7 +145,6 @@ function ThreejsRenderer({
                    }
                  </group>
                 
-                <Suspense fallback={<FallBackLoader/>}>
                   {
                     (base64Texture || tilesData.length > 0) && <Text
                       font={`${BASE_URL}/fonts/good-bakwan.woff`}
