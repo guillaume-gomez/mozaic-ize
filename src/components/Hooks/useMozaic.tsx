@@ -127,7 +127,7 @@ function useMozaic() {
       imageColorMode: string
     ) {
 
-      if(imageColorMode ==="normal") {
+      if(imageColorMode === "normal") {
         return interpolateArea(context, tileSize, x, y);
       }
 
