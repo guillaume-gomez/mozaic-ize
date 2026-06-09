@@ -18,6 +18,7 @@ function Range({label, onChange, value, min, max, step = 1} : RangeProps) {
           step={step}
           min={min}
           max={max}
+          value={value}
           type="range"
           className="range range-primary w-full"
           onChange={(e) => { onChange(parseInt(e.target.value)) }}
