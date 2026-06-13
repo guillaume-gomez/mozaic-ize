@@ -31,7 +31,9 @@ function App() {
     backgroundColor,
     setPadding,
     setTileSize,
-    setBackgroundColor
+    setBackgroundColor,
+    // setHasFrame,
+    // hasFrame
   } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
