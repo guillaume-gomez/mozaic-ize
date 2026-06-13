@@ -148,7 +148,7 @@ function App() {
                       />
                     </div>
                     <Range
-                      min={16}
+                      min={8}
                       max={128}
                       step={8}
                       label={"Change the mozaic tile size"}
