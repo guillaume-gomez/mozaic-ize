@@ -135,11 +135,27 @@ function useMozaic() {
       return findColorWithRandomness(context, tileSize, x, y, extendedPalette);
     }
 
+    function checkOutOfBounds(context: OffscreenCanvasRenderingContext2D, tileSize: number, x: number, y: number): any {
+      const { width : widthCanvas, height: heightCanvas } = context.canvas;
 
-    function interpolateArea(context: CanvasRenderingContext2D, tileSize: number, x: number, y: number) : Color {
-      const pixels = context.getImageData(x,y, tileSize, tileSize);
+      // check bounds
+      let pixelsWidth = x < 0 ? tileSize - x : tileSize;
+      const pixelsHeight = y < 0 ? tileSize - y : tileSize;
+
+      // we never out of bounds outside the widthCanvas and heightCanvas but I even though limit it
+      const xWithNoOutOfBounds = Math.min( Math.max(0, x), widthCanvas);
+      const yWithNoOutOfBounds = Math.min( Math.max(0, y), heightCanvas);
+
+      return { xWithNoOutOfBounds, yWithNoOutOfBounds, pixelsWidth, pixelsHeight};
+    }
+
+    function interpolateArea(context: OffscreenCanvasRenderingContext2D, tileSize: number, x: number, y: number) : Color {
+      const { xWithNoOutOfBounds, yWithNoOutOfBounds, pixelsWidth, pixelsHeight } = checkOutOfBounds(context, tileSize, x, y);
+      
+      // the extract the pixels and get the average color
+      const pixels = context.getImageData(xWithNoOutOfBounds , yWithNoOutOfBounds, pixelsWidth, pixelsHeight);
       const { data } = pixels;
-      const numberOfPixels = tileSize * tileSize;
+      const numberOfPixels = pixelsWidth * pixelsHeight;
       let red = 0;
       let green = 0;
       let blue = 0;
@@ -153,7 +169,6 @@ function useMozaic() {
 
       return { red: (red/numberOfPixels), green: (green/numberOfPixels), blue: (blue/numberOfPixels) };
     }
-
 
     function fromColorToDominantColor(color: Color, palette: Color[]) : Color {
       const comparaisonValues = palette.map(colorPalette => ({
