@@ -25,6 +25,18 @@ function useMozaic() {
   const [padding, setPadding] = useState<number>(2);
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
   const [hasFrame, setHasFrame] = useState<boolean>(true);
+  const [mozaicWidth, setMozaicWidth] = useState<number>(0);
+  const [mozaicHeight, setMozaicHeight] = useState<number>(0);
+
+    function createOffscreenCanvas(imageOrigin: HTMLImageElement): OffscreenCanvas {
+      const {width, height} = imageOrigin;
+      const canvas = new OffscreenCanvas(width, height);
+    
+      setMozaicWidth(width);
+      setMozaicHeight(height);
+
+      return canvas;
+    }
 
     async function generateImage(imageOrigin: HTMLImageElement, imageColorMode: string) : Promise<string> {
       const tilesData = generate(imageOrigin, imageColorMode);
@@ -33,8 +45,7 @@ function useMozaic() {
         throw new Error("tilesData are not ready");
       }
 
-      const {width, height} = imageOrigin
-      const canvas = new OffscreenCanvas(width, height);
+      const canvas = createOffscreenCanvas(imageOrigin);
       const context = canvas.getContext("2d");
       if(!context) {
         throw new Error("Cannot find the context");
@@ -74,7 +85,7 @@ function useMozaic() {
 
     function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : TileData[] {
         const { width, height } = imageOrigin;        
-        const canvasBuffer = new OffscreenCanvas(width, height);
+        const canvasBuffer = createOffscreenCanvas(imageOrigin);
         const palette = generateColorPalette(imageOrigin , 20);
         const extendedPalette = extendPalette(palette, 20, 20);
         const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
@@ -220,7 +231,9 @@ function useMozaic() {
     setTileSize,
     setBackgroundColor,
     hasFrame,
-    setHasFrame
+    setHasFrame,
+    mozaicWidth,
+    mozaicHeight
   };
 }
 

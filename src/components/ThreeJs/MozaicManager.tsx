@@ -5,8 +5,8 @@ import { useEffect } from "react";
 const { BASE_URL } = import.meta.env;
 
 interface MozaicManagerProps {
-  widthMozaic: number;
-  heightMozaic: number;
+  mozaicWidth: number;
+  mozaicHeight: number;
   base64Texture: string;
   tileSize: number;
   visible: boolean;
@@ -19,8 +19,8 @@ const offset = 0;
 const SCALE = 10
 
 function MozaicManager({
-  widthMozaic,
-  heightMozaic,
+  mozaicWidth,
+  mozaicHeight,
   base64Texture,
   tileSize,
   visible
@@ -35,7 +35,7 @@ function MozaicManager({
     // we don't want to compute when the tilesize only change because the render does not fit the texture.
     // So we only recompute when the texture has changed (meaning the user clicked on generate)
     useEffect(() => {
-      normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
+      normalMap.repeat.set( mozaicWidth/tileSize, mozaicHeight/tileSize );
       normalMap.offset.set( offset, offset );
       normalMap.wrapS = RepeatWrapping;
       normalMap.wrapT = RepeatWrapping;
@@ -45,7 +45,7 @@ function MozaicManager({
       roughnessMap.wrapS = RepeatWrapping;
       roughnessMap.wrapT = RepeatWrapping;
 
-      aoMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
+      aoMap.repeat.set( mozaicWidth/tileSize, mozaicHeight/tileSize );
       aoMap.offset.set( offset, offset );
       aoMap.wrapS = RepeatWrapping;
       aoMap.wrapT = RepeatWrapping;
@@ -56,7 +56,7 @@ function MozaicManager({
 
   return (
     <mesh
-      scale={[SCALE,SCALE * (heightMozaic/widthMozaic),2]}
+      scale={[SCALE,SCALE * (mozaicHeight/mozaicWidth),2]}
       position={[0,0,0]}
       geometry={geometry}
       castShadow

@@ -21,8 +21,8 @@ const { BASE_URL, MODE } = import.meta.env;
 
 
 interface ThreeJsRendererProps {
-  widthMozaic: number;
-  heightMozaic: number;
+  mozaicWidth: number;
+  mozaicHeight: number;
   base64Texture: string;
   tilesData: TileData[];
   padding: number;
@@ -34,8 +34,8 @@ interface ThreeJsRendererProps {
 const DEPTH_MAIN_BUILDING = 19.5
 
 function ThreejsRenderer({
-  widthMozaic,
-  heightMozaic,
+  mozaicWidth,
+  mozaicHeight,
   base64Texture,
   tilesData,
   padding,
@@ -94,7 +94,7 @@ function ThreejsRenderer({
     const maxRatio = 1.9 // empirical value
     const expectedRatio = 17 // same
 
-    const ratio = widthMozaic > heightMozaic ? widthMozaic/widthMozaic : widthMozaic/heightMozaic;
+    const ratio = mozaicWidth > mozaicHeight ? mozaicWidth/mozaicWidth : mozaicWidth/mozaicHeight;
     
     return ratio*maxRatio*expectedRatio/DEPTH_MAIN_BUILDING;
   }
@@ -126,16 +126,16 @@ function ThreejsRenderer({
                   {base64Texture &&
                        <MozaicManager
                          base64Texture={base64Texture}
-                         widthMozaic={widthMozaic}
-                         heightMozaic={heightMozaic}
+                         mozaicWidth={mozaicWidth}
+                         mozaicHeight={mozaicHeight}
                          tileSize={tileSize}
                          visible={optimized}
                       />
                    }
                    {tilesData.length > 0 &&
                       <MozaicInstanceMesh
-                        width={widthMozaic}
-                        height={heightMozaic}
+                        width={mozaicWidth}
+                        height={mozaicHeight}
                         tileSize={tileSize}
                         padding={padding}
                         backgroundColor={backgroundColor}
