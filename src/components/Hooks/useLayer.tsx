@@ -13,13 +13,19 @@ export interface TileData {
   y: number;
 }
 
+interface LayerSettings {
+  extendedPalette?: ExtendedPalette;
+  imageColorMode?: string;
+  interpolateArea: boolean;
+
+}
+
 function useLayer() {  
   function generateLayer(
     canvasBuffer: OffscreenCanvas,
     tileSize: number,
     padding: number,
-    extendedPalette: ExtendedPalette,
-    imageColorMode: string
+    layerSettings: LayerSettings
   ) : TileData[] {
     
     const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
@@ -43,8 +49,7 @@ function useLayer() {
       height,
       tileSize,
       padding,
-      extendedPalette,
-      imageColorMode
+      layerSettings
     );
     return tilesData;
   }
@@ -55,13 +60,13 @@ function useLayer() {
     height: number,
     tileSize: number,
     padding: number,
-    extendedPalette: ExtendedPalette,
-    imageColorMode: string) : TileData[] {
+    layerSettings: LayerSettings) : TileData[] {
     const tilesData: TileData[] = [];
 
     for(let x = padding/2; x < width; x+= (tileSize) ) {
       for(let y = padding/2; y < height; y+= (tileSize) ) {
-        const color = computeColor(context, tileSize, x - padding, y - padding, extendedPalette, imageColorMode);
+        const color = computeColor(context, tileSize, x - padding, y - padding, layerSettings);
+        console.log(color)
         tilesData.push({
           color,
           x,
@@ -78,16 +83,26 @@ function useLayer() {
     tileSize: number,
     x: number,
     y: number,
-    extendedPalette: ExtendedPalette,
-    imageColorMode: string
+    layerSettings: LayerSettings
   ) {
+    const { extendedPalette, imageColorMode, interpolateArea: shouldInterpolateArea } = layerSettings;
+    if(!shouldInterpolateArea) {
+      return getPixelData(context, x, y);
+    }
 
-    if(imageColorMode === "normal") {
+    if (imageColorMode === "normal") {
       return interpolateArea(context, tileSize, x, y);
     }
 
     // using the palette to randomize the chosen color
-    return findColorWithRandomness(context, tileSize, x, y, extendedPalette);
+    return findColorWithRandomness(context, tileSize, x, y, extendedPalette as ExtendedPalette);
+  }
+
+  function getPixelData(context: OffscreenCanvasRenderingContext2D, x: number, y: number): Color  {
+    const pixels = context.getImageData(x,y, 1, 1);
+    const { data } = pixels;
+    
+    return { red: data[0], green: data[1], blue: data[2] };  
   }
 
 

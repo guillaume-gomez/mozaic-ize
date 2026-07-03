@@ -66,8 +66,12 @@ function useMozaic() {
           canvasBuffer, 
           tileSize, 
           padding,
-          extendedPalette,
-          imageColorMode
+          {
+            extendedPalette,
+            imageColorMode,
+            interpolateArea: true
+          }
+
         );
         setTilesData(tilesData);
         return tilesData;
