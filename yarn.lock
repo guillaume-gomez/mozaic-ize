@@ -1361,10 +1361,10 @@ cwise-compiler@^1.0.0:
   dependencies:
     uniq "^1.0.0"
 
-daisyui@^5.0.37:
-  version "5.0.37"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.0.37.tgz#d0a43518943cda150378333cfadce2cdc4696190"
-  integrity sha512-PLc+MhWAqTwolygEGPDi+ac+OsFqIt9nZylTIiyVlEx8loYL7Pt7hNWb8cp5pQQ9dhjYnda1ERiuM6OsJmvPGw==
+daisyui@^5.6.13:
+  version "5.6.13"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.6.13.tgz#3c71a432715016e1118ae5e4e968b4647eabe347"
+  integrity sha512-0UHyNG3TzF7pDIbPcWyLKQfgtGhJcIq2x26jwsDKp7ZhL0GwaqIMZ12+TWfp8p+mE4NNc29SJk63hEXTz3MQkg==
 
 date-fns@^4.1.0:
   version "4.1.0"
