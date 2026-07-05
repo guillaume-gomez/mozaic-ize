@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useDebounce } from "@uidotdev/usehooks";
 import Range from "./Range";
 import SaveImageButton from "./SaveImageButton";
 import { TileData } from "./Hooks/useMozaic";
@@ -25,6 +26,9 @@ function MozaicCanvas({
   const [shadowBlur, setShadowBlur] = useState<number>(0);
   const [shadow, setShadow] = useState<number>(0);
 
+  const shadowBlurDebounced = useDebounce(shadowBlur, 500);
+  const shadowDebounced = useDebounce(shadow, 500);
+
   useEffect(() => {
     if(!canvasRef.current) {
       return;
@@ -42,13 +46,13 @@ function MozaicCanvas({
     context.fillRect(0,0, width, height);
 
     drawTiles(context, tilesData, tileSize - padding);
-  }, [tilesData, canvasRef, backgroundColor, shadow, shadowBlur, width, height])
+  }, [tilesData, canvasRef, backgroundColor, shadowDebounced, shadowBlurDebounced, width, height])
 
   function drawTiles(context: CanvasRenderingContext2D, tilesData: TileData[], tileSize: number) {
     context.shadowColor = "black";
-    context.shadowOffsetX = shadow;
-    context.shadowOffsetY = shadow;
-    context.shadowBlur = shadowBlur;
+    context.shadowOffsetX = shadowDebounced;
+    context.shadowOffsetY = shadowDebounced;
+    context.shadowBlur = shadowBlurDebounced;
     tilesData.forEach(colorData => {
         const { red, green, blue } = colorData.color;
         const { x, y } = colorData;

@@ -21,6 +21,7 @@
     "@types/color-convert": "^2.0.4",
     "@types/lodash": "^4.17.16",
     "@types/three": "^0.171.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "color-convert": "^2.0.1",
     "colorthief": "^2.6.0",
     "date-fns": "^4.1.0",
