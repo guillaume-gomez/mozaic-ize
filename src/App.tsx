@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -15,8 +15,6 @@ function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [twoDimension, setTwoDimension] =  useState<boolean>(false);
   const [imageColorMode, setImageColorMode] = useState<string>("normal");
-  const [width, setWidth] =  useState<number>(1024);
-  const [height, setHeight] =  useState<number>(1024);
   const [artistName, setArtistName]= useState<string>("Made by Guillaume G");
   const [dataUrl, setDataUrl] = useState<string>("");
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -31,16 +29,14 @@ function App() {
     backgroundColor,
     setPadding,
     setTileSize,
-    setBackgroundColor
+    setBackgroundColor,
+    mozaicWidth,
+    mozaicHeight
+    // setHasFrame,
+    // hasFrame
   } = useMozaic();
 
   function uploadImage(newImage: HTMLImageElement) {
-    const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
-    const expectedHeight = newImage.height + (tileSize - (newImage.height % tileSize))
-    
-    setWidth(expectedWidth);
-    setHeight(expectedHeight);
-
     setOriginalImage(newImage);
     setIsDirty(true);
   }
@@ -51,10 +47,6 @@ function App() {
       uploadImage(originalImage);
     }
   }, [tileSize]);
-
-  // memoize the size to avoid any rerender without clicking on generate
-  const expectedWidth = useMemo(() => width, [dataUrl]);
-  const expectedHeight = useMemo(() => height, [dataUrl]);
 
   const apiDiv = useSpringRef()
   const propsDiv = useSpring({
@@ -86,7 +78,10 @@ function App() {
       console.error("Image is not loaded")
       return;
     }
-    const resizedImage = await resizeImage(originalImage, width, height);
+    const expectedWidth = originalImage.width + (tileSize - (originalImage.width % tileSize))
+    const expectedHeight = originalImage.height + (tileSize - (originalImage.height % tileSize))
+    
+    const resizedImage = await resizeImage(originalImage, expectedWidth, expectedHeight);
     const dataUrl = await generateImage(resizedImage, imageColorMode);
     
     if(!dataUrl) {
@@ -226,8 +221,8 @@ function App() {
           >
              {  !twoDimension &&
                 <ThreeJsRenderer
-                  widthMozaic={expectedWidth}
-                  heightMozaic={expectedHeight}
+                  mozaicWidth={mozaicWidth}
+                  mozaicHeight={mozaicHeight}
                   base64Texture={dataUrl}
                   tilesData={tilesData}
                   tileSize={tileSize}
@@ -243,8 +238,8 @@ function App() {
                   tileSize={tileSize}
                   padding={padding}
                   tilesData={tilesData}
-                  width={expectedWidth}
-                  height={expectedHeight}
+                  width={mozaicWidth}
+                  height={mozaicHeight}
                 />
               }
           </div>

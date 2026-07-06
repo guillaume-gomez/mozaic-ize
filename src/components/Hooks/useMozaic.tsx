@@ -24,6 +24,19 @@ function useMozaic() {
   const [tileSize, setTileSize] = useState<number>(32);
   const [padding, setPadding] = useState<number>(2);
   const [backgroundColor, setBackgroundColor] = useState<string>("#FFFFFF");
+  const [hasFrame, setHasFrame] = useState<boolean>(true);
+  const [mozaicWidth, setMozaicWidth] = useState<number>(0);
+  const [mozaicHeight, setMozaicHeight] = useState<number>(0);
+
+    function createOffscreenCanvas(imageOrigin: HTMLImageElement): OffscreenCanvas {
+      const {width, height} = imageOrigin;
+      const canvas = new OffscreenCanvas(width, height);
+    
+      setMozaicWidth(width);
+      setMozaicHeight(height);
+
+      return canvas;
+    }
 
     async function generateImage(imageOrigin: HTMLImageElement, imageColorMode: string) : Promise<string> {
       const tilesData = generate(imageOrigin, imageColorMode);
@@ -32,8 +45,7 @@ function useMozaic() {
         throw new Error("tilesData are not ready");
       }
 
-      const {width, height} = imageOrigin
-      const canvas = new OffscreenCanvas(width, height);
+      const canvas = createOffscreenCanvas(imageOrigin);
       const context = canvas.getContext("2d");
       if(!context) {
         throw new Error("Cannot find the context");
@@ -56,23 +68,39 @@ function useMozaic() {
       return await toDataURL(blob);
     }
 
+    function drawWithFrame(context: OffscreenCanvasRenderingContext2D, image: HTMLImageElement) {
+      const frameSize = 5 * tileSize; // 5 Mozaicaic tile
+
+      const extendCanvas = frameSize * 2;
+      const canvas = context.canvas;
+      canvas.width = image.width + extendCanvas;
+      canvas.height = image.height + extendCanvas;
+      //draw the frame
+      
+      //then draw the image inner the frame
+      context.drawImage(image, 0,0, image.width, image.height,
+        frameSize, frameSize, image.width - extendCanvas, image.height - extendCanvas
+      );
+    }
+
     function generate(imageOrigin: HTMLImageElement, imageColorMode: string) : TileData[] {
-        const canvasBuffer = document.createElement("canvas");
+        const { width, height } = imageOrigin;        
+        const canvasBuffer = createOffscreenCanvas(imageOrigin);
         const palette = generateColorPalette(imageOrigin , 20);
         const extendedPalette = extendPalette(palette, 20, 20);
         const context = canvasBuffer.getContext('2d', { willReadFrequently: true });
-        const {width, height} = imageOrigin
-        // create backing canvas
-        canvasBuffer.width = width;
-        canvasBuffer.height = height;
         
         if(!context) {
           throw new Error("Cannot find the context");
         }
-        // restore main canvas
-        context.drawImage(imageOrigin, 0,0);
 
-
+        if(hasFrame) {
+          drawWithFrame(context, imageOrigin);
+        } else {
+          // restore main canvas
+          context.drawImage(imageOrigin, 0,0);  
+        }
+        
         if( width % (tileSize) !== 0) {
           throw new Error("Cannot match the width");
         }
@@ -95,7 +123,7 @@ function useMozaic() {
     }
 
     function getColorsImage(
-      context: CanvasRenderingContext2D,
+      context: OffscreenCanvasRenderingContext2D,
       width: number,
       height: number,
       tileSize: number,
@@ -119,7 +147,7 @@ function useMozaic() {
     }
 
     function computeColor(
-      context: CanvasRenderingContext2D,
+      context: OffscreenCanvasRenderingContext2D,
       tileSize: number,
       x: number,
       y: number,
@@ -136,7 +164,7 @@ function useMozaic() {
     }
 
 
-    function interpolateArea(context: CanvasRenderingContext2D, tileSize: number, x: number, y: number) : Color {
+    function interpolateArea(context: OffscreenCanvasRenderingContext2D, tileSize: number, x: number, y: number) : Color {
       const pixels = context.getImageData(x,y, tileSize, tileSize);
       const { data } = pixels;
       const numberOfPixels = tileSize * tileSize;
@@ -171,7 +199,7 @@ function useMozaic() {
     }
 
     function findColorWithRandomness(
-      context: CanvasRenderingContext2D,
+      context: OffscreenCanvasRenderingContext2D,
       tileSize: number,
       x: number,
       y: number,
@@ -201,7 +229,11 @@ function useMozaic() {
     backgroundColor,
     setPadding,
     setTileSize,
-    setBackgroundColor
+    setBackgroundColor,
+    hasFrame,
+    setHasFrame,
+    mozaicWidth,
+    mozaicHeight
   };
 }
 
