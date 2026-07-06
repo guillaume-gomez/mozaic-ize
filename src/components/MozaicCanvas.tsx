@@ -71,7 +71,7 @@ function MozaicCanvas({
 
 
   return (
-    <div className="flex flex-col gap-3 bg-black p-2 rounded-xl">
+    <div className="flex flex-col gap-3 bg-black p-3 rounded-xl">
       <Range
         min={0}
         max={20}
