@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useDebounce } from "@uidotdev/usehooks";
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import MozaicCanvas from "./components/MozaicCanvas";
 import ColorPicker from "./components/ColorPicker";
@@ -33,6 +34,8 @@ function App() {
     setTileSize,
     setBackgroundColor
   } = useMozaic();
+
+  const backgroundColorDebounced = useDebounce(backgroundColor, 250);
 
   function uploadImage(newImage: HTMLImageElement) {
     const expectedWidth = newImage.width + (tileSize - (newImage.width % tileSize))
@@ -232,14 +235,14 @@ function App() {
                   tilesData={tilesData}
                   tileSize={tileSize}
                   padding={padding}
-                  backgroundColor={backgroundColor}
+                  backgroundColor={backgroundColorDebounced}
                   artistName={artistName}
                 />
               }
               {
                 twoDimension &&
                 <MozaicCanvas
-                  backgroundColor={backgroundColor}
+                  backgroundColor={backgroundColorDebounced}
                   tileSize={tileSize}
                   padding={padding}
                   tilesData={tilesData}
