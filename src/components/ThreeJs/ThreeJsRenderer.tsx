@@ -120,6 +120,8 @@ function ThreejsRenderer({
           
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.0} />
+          {/* Suspense must wrap Stage: its <Center> measures the scene only once, on mount */}
+          <Suspense fallback={<FallBackLoader/>}>
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment="city">
                <Suspense fallback={<FallBackLoader/>}>
                 <group ref={groupRef} position={[-4.5,30,0]} scale={computeMozaicScale()} rotation={[0,Math.PI/2, 0]}>
@@ -159,7 +161,8 @@ function ThreejsRenderer({
                       {artistName}
                     </Text>
                   }
-                  
+                </Suspense>
+
                   <Gltf src={`${BASE_URL}/buildings/skyscraper.glb`} scale={[8.5,10, 16.5]} position={[-10,0.2,0]}  rotation={[ 0, -Math.PI, 0]}/>
                  
                   <group position={[0, 0.2, 15]} >
@@ -249,8 +252,8 @@ function ThreejsRenderer({
                   { MODE === "development" &&
                     <Grid args={[60, 60]} position={[0,0,0]} cellColor='white' />
                   }
-              </Suspense>
             </Stage>
+          </Suspense>
           { MODE === "development" &&
             <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
               <GizmoViewport labelColor="white" axisHeadScale={1} />
