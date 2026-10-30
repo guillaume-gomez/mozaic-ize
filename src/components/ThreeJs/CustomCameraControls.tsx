@@ -1,6 +1,6 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MathUtils, Object3D, Group } from "three";
+import { MathUtils, Object3D, Group, Box3 } from "three";
 import { CameraControls } from '@react-three/drei';
 
 interface CustomCameraControlsProps {
@@ -46,11 +46,15 @@ const CustomCameraControls = forwardRef<ExternalActionInterface, CustomCameraCon
 
   useImperativeHandle(ref, () => ({
     async recenter(group: Group) {
-      setAutoRotate(false);
-      
-      if(!cameraRef.current || !cameraRef.current) {
+      if(!cameraRef.current) {
         return;
       }
+      // camera-controls does not abort on an empty box (missing return after its warning):
+      // fitToBox would then compute a NaN camera position and nothing would be rendered anymore
+      if(new Box3().setFromObject(group).isEmpty()) {
+        return;
+      }
+      setAutoRotate(false);
       await cameraRef.current.setPosition(50, 10, 20, true);
       await cameraRef.current.fitToBox(group as Object3D, true,
         { paddingLeft: 2, paddingRight: 2, paddingBottom: 2, paddingTop: 2 }
